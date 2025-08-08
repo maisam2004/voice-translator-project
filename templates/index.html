@@ -23,7 +23,10 @@
         <form id="transcribe-form" enctype="multipart/form-data">
             <h3>1. Upload & Transcribe Audio</h3>
             <input type="file" name="audio" accept="audio/*" class="form-control mb-2">
-            <button type="submit" class="btn btn-primary">Transcribe</button>
+            <button type="submit" class="btn btn-primary">
+                <span id="transcribe-btn-text">Transcribe</span>
+                <span id="transcribe-spinner" class="spinner-border spinner-border-sm ms-2" role="status" style="display: none;"></span>
+            </button>
             <p id="transcribe-result" class="mt-2">Waiting for transcription...</p>
             <input type="hidden" id="transcribed-text">
             <input type="hidden" id="detected-language">
@@ -34,7 +37,8 @@
             
             <!-- Auto-Translate Button (Primary Option) -->
             <button id="auto-translate-btn" class="btn btn-success btn-lg me-3" disabled>
-                🚀 Auto-Translate & Generate Audio
+                <span id="auto-translate-text">🚀 Auto-Translate & Generate Audio</span>
+                <span id="auto-translate-spinner" class="spinner-border spinner-border-sm ms-2" role="status" style="display: none;"></span>
             </button>
             
             <!-- Manual Step-by-Step Option -->
@@ -83,6 +87,13 @@
         const manualTranslateBtn = document.getElementById("manual-translate-btn");
         const translationStatus = document.getElementById("translation-status");
         const manualTranslateText = document.getElementById("manual-translate-text");
+        
+        // Spinner elements
+        const transcribeBtnText = document.getElementById("transcribe-btn-text");
+        const transcribeSpinner = document.getElementById("transcribe-spinner");
+        const transcribeSubmitBtn = transcribeForm.querySelector('button[type="submit"]');
+        const autoTranslateText = document.getElementById("auto-translate-text");
+        const autoTranslateSpinner = document.getElementById("auto-translate-spinner");
 
         // Update hidden target language when global selector changes
         globalTargetLanguage.addEventListener("change", () => {
@@ -100,6 +111,9 @@
             
             if (!transcribedText) return;
             
+            // Start spinner and disable buttons
+            autoTranslateText.textContent = "🔄 Processing...";
+            autoTranslateSpinner.style.display = "inline-block";
             autoTranslateBtn.disabled = true;
             manualTranslateBtn.disabled = true;
             translationStatus.innerHTML = '<div class="alert alert-info">🔄 Translating and generating audio...</div>';
@@ -153,6 +167,9 @@
                 console.error("Auto-translate error:", error);
                 translationStatus.innerHTML = `<div class="alert alert-danger">❌ Error: ${error.message}</div>`;
             } finally {
+                // Stop spinner and re-enable buttons
+                autoTranslateText.textContent = "🚀 Auto-Translate & Generate Audio";
+                autoTranslateSpinner.style.display = "none";
                 autoTranslateBtn.disabled = false;
                 manualTranslateBtn.disabled = false;
             }
@@ -167,7 +184,13 @@
 
         transcribeForm.addEventListener("submit", async (e) => {
             e.preventDefault();
+            
+            // Start spinner and disable button
+            transcribeBtnText.textContent = "Processing...";
+            transcribeSpinner.style.display = "inline-block";
+            transcribeSubmitBtn.disabled = true;
             transcribeResult.innerText = "Processing...";
+            
             const formData = new FormData(e.target);
             try {
                 const response = await fetch("http://localhost:8000/transcribe", {
@@ -195,6 +218,11 @@
             } catch (error) {
                 console.error("Fetch error:", error);
                 transcribeResult.innerText = "Error: " + error.message;
+            } finally {
+                // Stop spinner and re-enable button
+                transcribeBtnText.textContent = "Transcribe";
+                transcribeSpinner.style.display = "none";
+                transcribeSubmitBtn.disabled = false;
             }
         });
 
