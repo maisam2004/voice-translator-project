@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Translator</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>مترجم صوتی</h1>
+        <form id="audio-form" enctype="multipart/form-data">
+            <label for="audio">فایل صوتی را بارگذاری کنید:</label>
+            <input type="file" id="audio" name="audio" accept="audio/*" required>
+            <button type="submit">تبدیل گفتار به متن</button>
+        </form>
+        <form id="text-form">
+            <label for="text">متن را وارد کنید:</label>
+            <textarea id="text" name="text" rows="4" required></textarea>
+            <button type="submit">ترجمه متن</button>
+        </form>
+        <form id="tts-form">
+            <label for="tts-text">متن را برای تبدیل به گفتار وارد کنید:</label>
+            <textarea id="tts-text" name="text" rows="4" required></textarea>
+            <button type="submit">تبدیل متن به گفتار</button>
+        </form>
+        <div id="result"></div>
+    </div>
+    <script src="/static/scripts.js"></script>
+</body>
+</html>
