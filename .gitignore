@@ -7,3 +7,6 @@ __pycache__/
 *.pyd
 .Python
 *.log
+templates/index2.html
+index2.html
+*.sqlite3

@@ -272,4 +272,742 @@
         });
     </script>
 </body>
-</html> {% endcomment %}
+</html>
+
+
+####################
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Voice Translator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Mobile-First Responsive Design */
+        :root {
+            --primary-color: #2563eb;
+            --success-color: #059669;
+            --warning-color: #d97706;
+            --danger-color: #dc2626;
+            --light-bg: #f8fafc;
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .main-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            margin: 20px;
+            overflow: hidden;
+        }
+
+        .header-section {
+            background: var(--primary-color);
+            color: white;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .header-section h1 {
+            margin: 0;
+            font-size: 1.75rem;
+            font-weight: 600;
+        }
+
+        .header-section p {
+            margin: 8px 0 0 0;
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .step-card {
+            margin: 24px;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .step-card.active {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgb(37 99 235 / 0.1);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 12px;
+            font-size: 0.9rem;
+        }
+
+        .step-number.completed {
+            background: var(--success-color);
+        }
+
+        .step-title {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        /* Language Selector */
+        .language-selector {
+            background: var(--light-bg);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+
+        .language-selector select {
+            font-size: 1rem;
+            padding: 12px;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
+            width: 100%;
+        }
+
+        /* File Upload Area */
+        .upload-area {
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            background: #fafafa;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background: #f0f9ff;
+        }
+
+        .upload-area.dragover {
+            border-color: var(--primary-color);
+            background: #f0f9ff;
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: #94a3b8;
+            margin-bottom: 16px;
+        }
+
+        .upload-text {
+            color: #64748b;
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+
+        .upload-subtext {
+            color: #94a3b8;
+            font-size: 0.875rem;
+        }
+
+        /* Buttons */
+        .btn-custom {
+            padding: 14px 28px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            border: none;
+            min-height: 48px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .btn-primary-custom {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary-custom:hover:not(:disabled) {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        .btn-success-custom {
+            background: var(--success-color);
+            color: white;
+            font-size: 1.1rem;
+            padding: 16px 32px;
+        }
+
+        .btn-success-custom:hover:not(:disabled) {
+            background: #047857;
+            transform: translateY(-1px);
+        }
+
+        .btn-outline-custom {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-outline-custom:hover:not(:disabled) {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-custom:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Text Areas and Inputs */
+        .text-display {
+            background: var(--light-bg);
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            font-size: 1rem;
+            line-height: 1.6;
+            min-height: 60px;
+        }
+
+        /* Progress and Status */
+        .status-message {
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+            font-size: 0.95rem;
+        }
+
+        .status-info {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1e40af;
+        }
+
+        .status-success {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+        }
+
+        .status-error {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+        }
+
+        /* Audio Player */
+        .audio-section {
+            background: var(--light-bg);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .audio-player {
+            width: 100%;
+            max-width: 100%;
+            margin-top: 16px;
+        }
+
+        /* Spinner */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            .main-container {
+                margin: 10px;
+                border-radius: 12px;
+            }
+
+            .step-card {
+                margin: 16px;
+                padding: 20px;
+            }
+
+            .header-section {
+                padding: 20px;
+            }
+
+            .header-section h1 {
+                font-size: 1.5rem;
+            }
+
+            .btn-custom {
+                width: 100%;
+                margin-bottom: 12px;
+            }
+
+            .upload-area {
+                padding: 30px 16px;
+            }
+
+            .upload-icon {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Hidden by default */
+        .step-card.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header Section -->
+        <div class="header-section">
+            <h1>🎙️ Voice Translator</h1>
+            <p>Translate speech from any language to any language</p>
+        </div>
+
+        <!-- Language Selection -->
+        <div class="language-selector">
+            <label for="global-target-language" style="font-weight: 600; color: #374151; margin-bottom: 8px; display: block;">
+                🎯 Select Target Language
+            </label>
+            <select id="global-target-language">
+                <option value="en">🇺🇸 English</option>
+                <option value="es">🇪🇸 Spanish</option>
+                <option value="fr">🇫🇷 French</option>
+                <option value="de">🇩🇪 German</option>
+                <option value="fa">🇮🇷 Farsi</option>
+            </select>
+        </div>
+
+        <!-- Step 1: Upload & Transcribe -->
+        <div class="step-card active" id="step-1">
+            <div class="step-header">
+                <div class="step-number">1</div>
+                <h3 class="step-title">Upload Audio File</h3>
+            </div>
+            
+            <form id="transcribe-form" enctype="multipart/form-data">
+                <div class="upload-area" onclick="document.querySelector('input[type=file]').click()">
+                    <div class="upload-icon">📁</div>
+                    <div class="upload-text">Drop your audio file here or click to browse</div>
+                    <div class="upload-subtext">Supports MP3, WAV, M4A and other audio formats</div>
+                    <input type="file" name="audio" accept="audio/*" style="display: none;" id="audio-input">
+                </div>
+                
+                <div id="file-selected" style="display: none; margin: 16px 0; padding: 12px; background: #f0fdf4; border-radius: 8px; color: #166534;">
+                    <strong>File selected:</strong> <span id="file-name"></span>
+                </div>
+
+                <button type="submit" class="btn-custom btn-primary-custom" style="width: 100%; margin-top: 20px;" disabled id="transcribe-btn">
+                    <span id="transcribe-btn-text">🎤 Transcribe Audio</span>
+                    <span id="transcribe-spinner" class="spinner" style="display: none;"></span>
+                </button>
+                
+                <div id="transcribe-result" style="margin-top: 16px; min-height: 20px;"></div>
+                <input type="hidden" id="transcribed-text">
+                <input type="hidden" id="detected-language">
+            </form>
+        </div>
+
+        <!-- Step 2: Translation -->
+        <div class="step-card hidden" id="step-2">
+            <div class="step-header">
+                <div class="step-number">2</div>
+                <h3 class="step-title">Translate Text</h3>
+            </div>
+
+            <div class="text-display" id="translate-input-display">
+                <em>Transcribed text will appear here...</em>
+            </div>
+            <input type="text" id="translate-input" name="text" style="display: none;" readonly>
+
+            <div style="margin-top: 24px;">
+                <button id="auto-translate-btn" class="btn-custom btn-success-custom" style="width: 100%; margin-bottom: 12px;" disabled>
+                    <span id="auto-translate-text">🚀 Auto-Translate & Generate Audio</span>
+                    <span id="auto-translate-spinner" class="spinner" style="display: none;"></span>
+                </button>
+                
+                <button id="manual-translate-btn" class="btn-custom btn-outline-custom" style="width: 100%;" disabled>
+                    ⚙️ Manual Step-by-Step
+                </button>
+            </div>
+
+            <div id="translation-status"></div>
+            
+            <!-- Manual Translation Form (Hidden by default) -->
+            <form id="translate-form" style="display: none; margin-top: 24px; padding: 20px; background: var(--light-bg); border-radius: 8px;">
+                <h4 style="margin-bottom: 16px; color: #374151;">Manual Translation</h4>
+                <input type="hidden" name="text" id="manual-translate-text">
+                <input type="hidden" name="source_language" id="source-language">
+                <input type="hidden" name="target_language" id="target-language">
+                <button type="submit" class="btn-custom btn-primary-custom">Translate Only</button>
+                <div id="translate-result" style="margin-top: 16px;"></div>
+            </form>
+        </div>
+
+        <!-- Step 3: Audio Result -->
+        <div class="step-card hidden" id="step-3">
+            <div class="step-header">
+                <div class="step-number">3</div>
+                <h3 class="step-title">Audio Result</h3>
+            </div>
+
+            <div class="audio-section">
+                <div style="font-size: 3rem; margin-bottom: 16px;">🎧</div>
+                <div style="font-size: 1.1rem; color: #374151; margin-bottom: 16px;">
+                    Your translated audio is ready!
+                </div>
+                <audio id="tts-result" controls class="audio-player" style="display: none;"></audio>
+            </div>
+            
+            <!-- Manual TTS Form (Hidden by default) -->
+            <form id="tts-form" style="display: none; margin-top: 24px;">
+                <h4>Manual Text to Speech</h4>
+                <div class="text-display" style="margin: 16px 0;">
+                    <input type="text" id="tts-input" name="text" placeholder="Translated text will appear here" readonly style="border: none; background: transparent; width: 100%; outline: none;">
+                </div>
+                <input type="hidden" name="language" id="tts-language">
+                <button type="submit" class="btn-custom btn-primary-custom" disabled>🔊 Generate Audio</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        // DOM Elements
+        const transcribeForm = document.getElementById("transcribe-form");
+        const translateForm = document.getElementById("translate-form");
+        const ttsForm = document.getElementById("tts-form");
+        const transcribeResult = document.getElementById("transcribe-result");
+        const translateInput = document.getElementById("translate-input");
+        const translateInputDisplay = document.getElementById("translate-input-display");
+        const sourceLanguage = document.getElementById("source-language");
+        const targetLanguage = document.getElementById("target-language");
+        const globalTargetLanguage = document.getElementById("global-target-language");
+        const ttsInput = document.getElementById("tts-input");
+        const ttsLanguage = document.getElementById("tts-language");
+        
+        // Button elements
+        const autoTranslateBtn = document.getElementById("auto-translate-btn");
+        const manualTranslateBtn = document.getElementById("manual-translate-btn");
+        const translationStatus = document.getElementById("translation-status");
+        const manualTranslateText = document.getElementById("manual-translate-text");
+        
+        // Spinner elements
+        const transcribeBtnText = document.getElementById("transcribe-btn-text");
+        const transcribeSpinner = document.getElementById("transcribe-spinner");
+        const transcribeSubmitBtn = document.getElementById("transcribe-btn");
+        const autoTranslateText = document.getElementById("auto-translate-text");
+        const autoTranslateSpinner = document.getElementById("auto-translate-spinner");
+        
+        // Step elements
+        const step1 = document.getElementById("step-1");
+        const step2 = document.getElementById("step-2");
+        const step3 = document.getElementById("step-3");
+        
+        // File input elements
+        const audioInput = document.getElementById("audio-input");
+        const fileSelected = document.getElementById("file-selected");
+        const fileName = document.getElementById("file-name");
+
+        // Progressive UI Functions
+        function showStep(stepNum) {
+            [step1, step2, step3].forEach((step, index) => {
+                if (index + 1 <= stepNum) {
+                    step.classList.remove("hidden");
+                    if (index + 1 === stepNum) {
+                        step.classList.add("active");
+                    } else {
+                        step.classList.remove("active");
+                    }
+                } else {
+                    step.classList.add("hidden");
+                }
+            });
+        }
+
+        function completeStep(stepNum) {
+            const stepElement = document.getElementById(`step-${stepNum}`);
+            const stepNumber = stepElement.querySelector('.step-number');
+            stepNumber.textContent = '✓';
+            stepNumber.classList.add('completed');
+        }
+
+        function showStatusMessage(message, type = 'info') {
+            const statusClass = `status-${type}`;
+            return `<div class="${statusClass} status-message">${message}</div>`;
+        }
+
+        // File Upload Handling
+        audioInput.addEventListener("change", function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                fileName.textContent = file.name;
+                fileSelected.style.display = "block";
+                transcribeSubmitBtn.disabled = false;
+            } else {
+                fileSelected.style.display = "none";
+                transcribeSubmitBtn.disabled = true;
+            }
+        });
+
+        // Drag and Drop
+        const uploadArea = document.querySelector('.upload-area');
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            uploadArea.classList.add('dragover');
+        }
+
+        function unhighlight(e) {
+            uploadArea.classList.remove('dragover');
+        }
+
+        uploadArea.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            if (files.length > 0) {
+                audioInput.files = files;
+                audioInput.dispatchEvent(new Event('change'));
+            }
+        }
+
+        // Update hidden target language when global selector changes
+        globalTargetLanguage.addEventListener("change", () => {
+            targetLanguage.value = globalTargetLanguage.value;
+        });
+
+        // Initialize target language
+        targetLanguage.value = globalTargetLanguage.value;
+
+        // Auto-Translate Button Handler
+        autoTranslateBtn.addEventListener("click", async () => {
+            const transcribedText = translateInput.value;
+            const sourceLang = sourceLanguage.value;
+            const targetLang = globalTargetLanguage.value;
+            
+            if (!transcribedText) return;
+            
+            // Start spinner and disable buttons
+            autoTranslateText.textContent = "🔄 Processing...";
+            autoTranslateSpinner.style.display = "inline-block";
+            autoTranslateBtn.disabled = true;
+            manualTranslateBtn.disabled = true;
+            translationStatus.innerHTML = showStatusMessage("🔄 Translating and generating audio...", "info");
+            
+            try {
+                // Step 1: Translate
+                const translateFormData = new FormData();
+                translateFormData.append('text', transcribedText);
+                translateFormData.append('source_language', sourceLang);
+                translateFormData.append('target_language', targetLang);
+                
+                const translateResponse = await fetch("http://localhost:8000/translate", {
+                    method: "POST",
+                    body: translateFormData
+                });
+                const translateResult = await translateResponse.json();
+                
+                if (!translateResult.translated_text) {
+                    throw new Error(translateResult.detail || "Translation failed");
+                }
+                
+                translationStatus.innerHTML = showStatusMessage(`✅ Translation: "${translateResult.translated_text}"`, "success");
+                
+                // Step 2: Generate Audio
+                translationStatus.innerHTML += showStatusMessage("🔊 Generating audio...", "info");
+                
+                const ttsFormData = new FormData();
+                ttsFormData.append('text', translateResult.translated_text);
+                ttsFormData.append('language', targetLang);
+                
+                const ttsResponse = await fetch("http://localhost:8000/tts", {
+                    method: "POST",
+                    body: ttsFormData
+                });
+                const audioBlob = await ttsResponse.blob();
+                const audioUrl = URL.createObjectURL(audioBlob);
+                const audio = document.getElementById("tts-result");
+                audio.src = audioUrl;
+                audio.style.display = "block";
+                
+                // Show step 3 and complete step 2
+                completeStep(2);
+                showStep(3);
+                audio.play();
+                
+                translationStatus.innerHTML = showStatusMessage(`
+                    <strong>✅ Complete!</strong><br>
+                    <strong>Original (${sourceLang}):</strong> ${transcribedText}<br>
+                    <strong>Translated (${targetLang}):</strong> ${translateResult.translated_text}
+                `, "success");
+                
+            } catch (error) {
+                console.error("Auto-translate error:", error);
+                translationStatus.innerHTML = showStatusMessage(`❌ Error: ${error.message}`, "error");
+            } finally {
+                // Stop spinner and re-enable buttons
+                autoTranslateText.textContent = "🚀 Auto-Translate & Generate Audio";
+                autoTranslateSpinner.style.display = "none";
+                autoTranslateBtn.disabled = false;
+                manualTranslateBtn.disabled = false;
+            }
+        });
+
+        // Manual Step-by-Step Button Handler
+        manualTranslateBtn.addEventListener("click", () => {
+            translateForm.style.display = translateForm.style.display === "none" ? "block" : "none";
+            ttsForm.style.display = ttsForm.style.display === "none" ? "block" : "none";
+            manualTranslateText.value = translateInput.value;
+        });
+
+        // Transcribe Form Handler
+        transcribeForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            
+            // Start spinner and disable button
+            transcribeBtnText.textContent = "🔄 Processing...";
+            transcribeSpinner.style.display = "inline-block";
+            transcribeSubmitBtn.disabled = true;
+            transcribeResult.innerHTML = showStatusMessage("Processing audio...", "info");
+            
+            const formData = new FormData(e.target);
+            try {
+                const response = await fetch("http://localhost:8000/transcribe", {
+                    method: "POST",
+                    body: formData
+                });
+                const result = await response.json();
+                console.log("Transcription response:", result);
+                
+                const resultText = result.text || result.detail || "No text transcribed";
+                
+                if (result.text) {
+                    transcribeResult.innerHTML = showStatusMessage(`✅ Transcribed: "${resultText}" (Language: ${result.language_detected || 'unknown'})`, "success");
+                    
+                    // Update UI elements
+                    translateInput.value = result.text;
+                    translateInputDisplay.innerHTML = `<strong>Original (${result.language_detected}):</strong><br>${result.text}`;
+                    sourceLanguage.value = result.language_detected || "unknown";
+                    targetLanguage.value = globalTargetLanguage.value;
+                    manualTranslateText.value = result.text;
+                    
+                    // Enable step 2
+                    autoTranslateBtn.disabled = false;
+                    manualTranslateBtn.disabled = false;
+                    
+                    // Complete step 1 and show step 2
+                    completeStep(1);
+                    showStep(2);
+                    
+                    // Clear previous results
+                    translationStatus.innerHTML = "";
+                    document.getElementById("tts-result").style.display = "none";
+                } else {
+                    transcribeResult.innerHTML = showStatusMessage(`❌ ${resultText}`, "error");
+                }
+            } catch (error) {
+                console.error("Fetch error:", error);
+                transcribeResult.innerHTML = showStatusMessage(`❌ Error: ${error.message}`, "error");
+            } finally {
+                // Stop spinner and re-enable button
+                transcribeBtnText.textContent = "🎤 Transcribe Audio";
+                transcribeSpinner.style.display = "none";
+                transcribeSubmitBtn.disabled = false;
+            }
+        });
+
+        // Manual Translation Form Handler
+        translateForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            try {
+                const response = await fetch("http://localhost:8000/translate", {
+                    method: "POST",
+                    body: formData
+                });
+                const result = await response.json();
+                console.log("Translation response:", result);
+                document.getElementById("translate-result").innerHTML = showStatusMessage(result.translated_text || result.detail, result.translated_text ? "success" : "error");
+                ttsInput.value = result.translated_text || "";
+                ttsLanguage.value = globalTargetLanguage.value;
+                ttsForm.querySelector("button").disabled = !result.translated_text;
+            } catch (error) {
+                console.error("Fetch error:", error);
+                document.getElementById("translate-result").innerHTML = showStatusMessage(`Error: ${error.message}`, "error");
+            }
+        });
+
+        // Manual TTS Form Handler
+        ttsForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            try {
+                const response = await fetch("http://localhost:8000/tts", {
+                    method: "POST",
+                    body: formData
+                });
+                const audioBlob = await response.blob();
+                const audioUrl = URL.createObjectURL(audioBlob);
+                const audio = document.getElementById("tts-result");
+                audio.src = audioUrl;
+                audio.style.display = "block";
+                showStep(3);
+                audio.play();
+            } catch (error) {
+                console.error("Fetch error:", error);
+                document.getElementById("tts-result").innerHTML = showStatusMessage(`Error: ${error.message}`, "error");
+            }
+        });
+
+        // Initialize
+        showStep(1);
+    </script>
+</body>
+</html>
+{% endcomment %}
