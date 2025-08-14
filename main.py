@@ -7,10 +7,16 @@ import os
 import uuid
 from dotenv import load_dotenv
 import tempfile
+from fastapi.staticfiles import StaticFiles
+
+
+
+
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
-
+# Mount static directory (add this before your routes)
+app.mount("/static", StaticFiles(directory="static"), name="static")
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
@@ -105,18 +111,57 @@ async def transcribe_audio(audio: UploadFile = File(...)):
 async def translate_text(text: str = Form(...), source_language: str = Form(...), target_language: str = Form(...)):
     """Translate text from detected language to target language using Google Cloud Translation."""
     try:
+        # Prepare the request data
+        translate_data = {
+            "q": text,
+            "target": target_language,
+            "format": "text"
+        }
+        
+        # Only include source if it's not 'auto'
+        if source_language != 'auto':
+            translate_data["source"] = source_language
+        
+        print(f"Translation request - Text: {text[:50]}..., Source: {source_language}, Target: {target_language}")
+        
+        # Use the correct content type for Google Translate API
+        headers = {
+            "Content-Type": "application/json"
+        }
+        
         response = requests.post(
             f"https://translation.googleapis.com/language/translate/v2?key={GOOGLE_API_KEY}",
-            json={
-                "q": text,
-                "source": source_language,
-                "target": target_language,
-                "format": "text"
-            }
+            headers=headers,
+            json=translate_data
         )
-        response.raise_for_status()
-        translated_text = response.json()["data"]["translations"][0]["translatedText"]
+        
+        print(f"Google Translate response status: {response.status_code}")
+        
+        if response.status_code != 200:
+            # Don't expose the full error which might contain API key
+            print(f"Google Translate error response (status {response.status_code})")
+            if response.status_code == 400:
+                raise HTTPException(status_code=500, detail="Invalid translation request format")
+            elif response.status_code == 403:
+                raise HTTPException(status_code=500, detail="Google Translate API access denied - check API key")
+            else:
+                raise HTTPException(status_code=500, detail=f"Google Translate API error: {response.status_code}")
+        
+        result = response.json()
+        translated_text = result["data"]["translations"][0]["translatedText"]
+        
+        print(f"Translation successful: {translated_text[:50]}...")
         return {"translated_text": translated_text}
+        
+    except requests.exceptions.RequestException as e:
+        print(f"Request error in /translate: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Translation service error: {str(e)}")
+    except KeyError as e:
+        print(f"Response format error in /translate: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Invalid response from translation service: {str(e)}")
+    except Exception as e:
+        print(f"Unexpected error in /translate: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Translation failed: {str(e)}")
     except Exception as e:
         print(f"Error in /translate: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -173,6 +218,41 @@ async def cleanup_temp_files():
                 print(f"Cleaned up: {file}")
         except Exception as e:
             print(f"Error cleaning up {file}: {str(e)}")
+
+
+
+# Update your route
+@app.get("/realtime")
+async def realtime_translation(request: Request):
+    return templates.TemplateResponse("realtime.html", {"request": request})
+
+@app.get("/get-realtime-token")
+async def get_realtime_token():
+    """Get a real-time token for AssemblyAI Universal Streaming API."""
+    try:
+        headers = {
+            "Authorization": f"Bearer {ASSEMBLYAI_API_KEY}",
+            "Content-Type": "application/json"
+        }
+        # Use Universal Streaming API
+        response = requests.post(
+            "https://api.assemblyai.com/v2/streaming/token",
+            headers=headers,
+            json={"expires_in": 3600}  # Token expires in 1 hour
+        )
+        response.raise_for_status()
+        return response.json()
+    except Exception as e:
+        print(f"Error getting realtime token: {str(e)}")
+        # For now, return a simple message since the API might be deprecated
+        return {"error": "Real-time API unavailable", "message": "Please use Web Speech API instead"}
+
+
+
+
+
+
+
 
 @app.on_event("startup")
 async def startup_event():

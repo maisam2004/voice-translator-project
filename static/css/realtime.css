@@ -1,0 +1,233 @@
+:root {
+    --primary-blue: #2563eb;
+    --success-green: #059669;
+    --error-red: #ef4444;
+    --light-gray: #f3f4f6;
+    --dark-gray: #6b7280;
+    --white: #ffffff;
+    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --transition: all 0.3s ease;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: linear-gradient(135deg, #1e3a8a 0%, #4c1d95 100%);
+    color: #f3f4f6;
+    min-height: 100vh;
+    padding: 2rem;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin-bottom: 1.5rem;
+}
+
+.back-btn {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.back-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.language-selector {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(10px);
+}
+
+.language-selector label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.language-selector select {
+    width: 100%;
+    padding: 0.8rem;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.8rem;
+    background-color: rgba(0, 0, 0, 0.2);
+    color: white;
+    font-size: 1rem;
+}
+
+.language-selector select:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+}
+
+.recording-card, .transcript-card, .translation-card {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(10px);
+}
+
+.recording-controls {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.btn {
+    padding: 1rem 1.5rem;
+    border: none;
+    border-radius: 0.8rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-primary {
+    background-color: var(--primary-blue);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #1d4ed8;
+}
+
+.btn-error {
+    background-color: var(--error-red);
+    color: white;
+}
+
+.btn-error:hover {
+    background-color: #dc2626;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.recording-status {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.recording-indicator {
+    position: relative;
+    width: 100px;
+    height: 100px;
+}
+
+.pulse-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: rgba(239, 68, 68, 0.2);
+    animation: pulse 2s infinite;
+}
+
+.mic-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3rem;
+}
+
+.recording-timer {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+}
+
+.transcript-content, .translation-output {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 0.8rem;
+    padding: 1.5rem;
+    min-height: 150px;
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    line-height: 1.6;
+}
+
+.translation-output {
+    min-height: 100px;
+}
+
+.status-message {
+    padding: 1rem;
+    border-radius: 0.8rem;
+    text-align: center;
+    font-weight: 500;
+    margin-top: 1rem;
+    display: none;
+}
+
+.status-message.error {
+    background-color: rgba(239, 68, 68, 0.2);
+    color: #fecaca;
+    display: block;
+}
+
+.status-message.success {
+    background-color: rgba(5, 150, 105, 0.2);
+    color: #a7f3d0;
+    display: block;
+}
+
+audio {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(0.95);
+        opacity: 0.7;
+    }
+    70% {
+        transform: scale(1.2);
+        opacity: 0.3;
+    }
+    100% {
+        transform: scale(0.95);
+        opacity: 0.7;
+    }
+}

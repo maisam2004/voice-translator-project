@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Voice Translator</title>
+    <link rel="stylesheet" href="/static/css/realtime.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎙️ Real-Time Voice Translator</h1>
+            <p class="subtitle">Speak in any language, get instant translation</p>
+            <a href="/" class="back-btn">← Back to File Translation</a>
+        </header>
+
+        <div class="language-selector">
+            <label for="target-language">🎯 Translate To:</label>
+            <select id="target-language">
+                <option value="en">🇺🇸 English</option>
+                <option value="es">🇪🇸 Spanish</option>
+                <option value="fr">🇫🇷 French</option>
+                <option value="de">🇩🇪 German</option>
+                <option value="fa">🇮🇷 Farsi</option>
+            </select>
+        </div>
+
+        <div class="recording-card">
+            <div class="recording-controls">
+                <button id="start-recording-btn" class="btn btn-primary">
+                    🎤 Start Speaking
+                </button>
+                <button id="stop-recording-btn" class="btn btn-error" disabled>
+                    ⏹️ Stop Recording
+                </button>
+            </div>
+            
+            <div class="recording-status">
+                <div class="recording-indicator">
+                    <div class="pulse-ring"></div>
+                    <div class="mic-icon">🎤</div>
+                </div>
+                <div class="recording-timer">00:00</div>
+            </div>
+        </div>
+
+        <div class="transcript-card">
+            <h2>Live Transcription</h2>
+            <div class="transcript-content" id="transcript-content"></div>
+        </div>
+
+        <div class="translation-card">
+            <h2>Translation Output</h2>
+            <div class="translation-output" id="translation-output"></div>
+            <audio id="translation-audio" controls></audio>
+        </div>
+
+        <div class="status-message" id="status-message"></div>
+    </div>
+
+    <script src="/static/js/realtime_webspeech.js"></script>
+</body>
+</html>

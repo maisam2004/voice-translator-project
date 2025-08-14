@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎙️ Voice Translator - File Upload</title>
+    <style>
+        :root {
+            --primary-blue: #2563eb;
+            --success-green: #059669;
+            --light-gray: #f3f4f6;
+            --text-gray: #6b7280;
+            --error-red: #ef4444;
+            --white: #ffffff;
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --transition: all 0.3s ease;
+            --border-radius: 16px;
+            --padding: 24px;
+            --margin: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            color: #1f2937;
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: var(--padding);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            flex-direction: column;
+            gap: var(--margin);
+        }
+
+        header {
+            text-align: center;
+            color: var(--white);
+            margin-bottom: var(--margin);
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 16px;
+        }
+
+        .navigation {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .nav-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-btn.active {
+            background-color: var(--white);
+            color: var(--primary-blue);
+        }
+
+        .card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: var(--padding);
+            box-shadow: var(--card-shadow);
+            width: 100%;
+        }
+
+        .language-selector {
+            margin-bottom: var(--margin);
+        }
+
+        .language-selector label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-gray);
+        }
+
+        .language-selector select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: var(--white);
+            transition: var(--transition);
+        }
+
+        .language-selector select:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .upload-section {
+            margin-bottom: var(--margin);
+        }
+
+        .upload-section h2 {
+            margin-bottom: 16px;
+            color: #1f2937;
+            font-size: 20px;
+        }
+
+        .file-upload {
+            border: 2px dashed #d1d5db;
+            border-radius: 12px;
+            padding: 32px;
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .file-upload:hover {
+            border-color: var(--primary-blue);
+            background-color: #f8fafc;
+        }
+
+        .file-upload.dragover {
+            border-color: var(--primary-blue);
+            background-color: #eff6ff;
+        }
+
+        .file-upload input {
+            display: none;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            color: var(--text-gray);
+        }
+
+        .upload-text {
+            color: var(--text-gray);
+            margin-bottom: 8px;
+        }
+
+        .file-types {
+            font-size: 14px;
+            color: var(--text-gray);
+            opacity: 0.8;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            margin-top: 16px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+        }
+
+        .btn-primary:disabled {
+            background-color: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e5e7eb;
+            border-top: 4px solid var(--primary-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .result-section {
+            display: none;
+        }
+
+        .result-section.show {
+            display: block;
+        }
+
+        .result-box {
+            background-color: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .result-box h3 {
+            margin-bottom: 8px;
+            color: #1f2937;
+            font-size: 16px;
+        }
+
+        .result-text {
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        .language-detected {
+            background-color: #eff6ff;
+            color: var(--primary-blue);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .audio-player {
+            width: 100%;
+            margin-top: 12px;
+        }
+
+        .error-message {
+            background-color: #fee2e2;
+            color: var(--error-red);
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 16px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .reset-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: none;
+        }
+
+        .reset-btn.visible {
+            display: block;
+        }
+
+        .reset-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <button class="reset-btn" id="resetBtn">🔄 Reset</button>
+
+    <div class="container">
+        <header>
+            <h1>🎙️ Voice Translator</h1>
+            <p class="subtitle">Upload audio files and get instant translations</p>
+            
+            <div class="navigation">
+                <span class="nav-btn active">📁 File Upload</span>
+                <a href="/realtime" class="nav-btn">🎤 Real-Time Speaking</a>
+            </div>
+        </header>
+
+        <div class="card language-selector">
+            <label for="targetLanguage">🎯 Translate To:</label>
+            <select id="targetLanguage">
+                <option value="en">🇺🇸 English</option>
+                <option value="es">🇪🇸 Spanish</option>
+                <option value="fr">🇫🇷 French</option>
+                <option value="de">🇩🇪 German</option>
+                <option value="fa">🇮🇷 Farsi</option>
+            </select>
+        </div>
+
+        <div class="card upload-section">
+            <h2>📁 Upload Audio File</h2>
+            <div class="file-upload" id="fileUpload">
+                <input type="file" id="audioFile" accept="audio/*">
+                <div class="upload-icon">🎵</div>
+                <div class="upload-text">Click to upload or drag and drop</div>
+                <div class="file-types">Supports: MP3, WAV, M4A, OGG</div>
+            </div>
+            <button class="btn btn-primary" id="processBtn" disabled>🚀 Process Audio</button>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Processing your audio...</p>
+        </div>
+
+        <div class="card result-section" id="resultSection">
+            <div class="result-box">
+                <h3>🎯 Original Text</h3>
+                <div class="language-detected" id="detectedLanguage"></div>
+                <div class="result-text" id="originalText"></div>
+            </div>
+            
+            <div class="result-box">
+                <h3>🌐 Translation</h3>
+                <div class="result-text" id="translatedText"></div>
+                <audio class="audio-player" id="audioPlayer" controls></audio>
+            </div>
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+    </div>
+
+    <script>
+        const fileUpload = document.getElementById('fileUpload');
+        const audioFileInput = document.getElementById('audioFile');
+        const processBtn = document.getElementById('processBtn');
+        const loading = document.getElementById('loading');
+        const resultSection = document.getElementById('resultSection');
+        const errorMessage = document.getElementById('errorMessage');
+        const resetBtn = document.getElementById('resetBtn');
+        const targetLanguageSelect = document.getElementById('targetLanguage');
+
+        // File upload handling
+        fileUpload.addEventListener('click', () => audioFileInput.click());
+        fileUpload.addEventListener('dragover', handleDragOver);
+        fileUpload.addEventListener('drop', handleDrop);
+        audioFileInput.addEventListener('change', handleFileSelect);
+        processBtn.addEventListener('click', processAudio);
+        resetBtn.addEventListener('click', resetForm);
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            fileUpload.classList.add('dragover');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            fileUpload.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                audioFileInput.files = files;
+                handleFileSelect();
+            }
+        }
+
+        function handleFileSelect() {
+            const file = audioFileInput.files[0];
+            if (file) {
+                processBtn.disabled = false;
+                fileUpload.querySelector('.upload-text').textContent = `Selected: ${file.name}`;
+            }
+        }
+
+        async function processAudio() {
+            const file = audioFileInput.files[0];
+            if (!file) return;
+
+            hideError();
+            showLoading();
+            
+            try {
+                // Step 1: Transcribe
+                const transcribeResult = await transcribeAudio(file);
+                
+                // Step 2: Translate
+                const translationResult = await translateText(
+                    transcribeResult.text,
+                    transcribeResult.language_detected,
+                    targetLanguageSelect.value
+                );
+                
+                // Step 3: Text-to-Speech
+                const audioUrl = await generateSpeech(
+                    translationResult.translated_text,
+                    targetLanguageSelect.value
+                );
+                
+                // Display results
+                displayResults(transcribeResult, translationResult, audioUrl);
+                
+            } catch (error) {
+                showError('Processing failed: ' + error.message);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function transcribeAudio(file) {
+            const formData = new FormData();
+            formData.append('audio', file);
+            
+            const response = await fetch('/transcribe', {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (!response.ok) {
+                throw new Error('Transcription failed');
+            }
+            
+            return await response.json();
+        }
+
+        async function translateText(text, sourceLanguage, targetLanguage) {
+            const formData = new FormData();
+            formData.append('text', text);
+            formData.append('source_language', sourceLanguage);
+            formData.append('target_language', targetLanguage);
+            
+            const response = await fetch('/translate', {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (!response.ok) {
+                throw new Error('Translation failed');
+            }
+            
+            return await response.json();
+        }
+
+        async function generateSpeech(text, language) {
+            const formData = new FormData();
+            formData.append('text', text);
+            formData.append('language', language);
+            
+            const response = await fetch('/tts', {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (!response.ok) {
+                throw new Error('Speech generation failed');
+            }
+            
+            const blob = await response.blob();
+            return URL.createObjectURL(blob);
+        }
+
+        function displayResults(transcribeResult, translationResult, audioUrl) {
+            document.getElementById('detectedLanguage').textContent = 
+                `Detected: ${transcribeResult.language_detected.toUpperCase()}`;
+            document.getElementById('originalText').textContent = transcribeResult.text;
+            document.getElementById('translatedText').textContent = translationResult.translated_text;
+            document.getElementById('audioPlayer').src = audioUrl;
+            
+            resultSection.classList.add('show');
+            resetBtn.classList.add('visible');
+        }
+
+        function showLoading() {
+            loading.classList.add('show');
+            processBtn.disabled = true;
+        }
+
+        function hideLoading() {
+            loading.classList.remove('show');
+            processBtn.disabled = false;
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.add('show');
+        }
+
+        function hideError() {
+            errorMessage.classList.remove('show');
+        }
+
+        function resetForm() {
+            audioFileInput.value = '';
+            processBtn.disabled = true;
+            resultSection.classList.remove('show');
+            resetBtn.classList.remove('visible');
+            hideError();
+            fileUpload.querySelector('.upload-text').textContent = 'Click to upload or drag and drop';
+        }
+    </script>
+</body>
+</html>
