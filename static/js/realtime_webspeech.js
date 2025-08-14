@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const translationEl = document.getElementById('translation-output');
     const audioPlayer = document.getElementById('translation-audio');
     const statusEl = document.getElementById('status-message');
+    const sourceLangSelect = document.getElementById('source-language');
     const targetLangSelect = document.getElementById('target-language');
 
     // State variables
@@ -39,8 +40,9 @@ document.addEventListener('DOMContentLoaded', function() {
             startBtn.disabled = true;
             stopBtn.disabled = false;
             transcriptEl.textContent = '';
-            translationEl.innerHTML = '';
+            translationEl.innerHTML = '<div style="color: #6b7280; font-style: italic;">Translations will appear here...</div>';
             audioPlayer.src = '';
+            audioPlayer.style.display = 'none';
             
             // Initialize Web Speech API
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -51,10 +53,11 @@ document.addEventListener('DOMContentLoaded', function() {
             recognition.interimResults = true;
             recognition.maxAlternatives = 1;
             
-            // Auto-detect language based on target language selection
-            const targetLang = targetLangSelect.value;
-            const sourceLang = getSourceLanguage(targetLang);
+            // Use the selected source language for speech recognition
+            const sourceLang = sourceLangSelect.value;
             recognition.lang = sourceLang;
+            
+            console.log(`Speech recognition set to: ${sourceLang}`);
             
             // Start timer
             recordingStartTime = Date.now();
@@ -63,7 +66,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Recognition event handlers
             recognition.onstart = function() {
-                showStatus('🎤 Recording started! Speak clearly into your microphone.', 'success');
+                const sourceLangName = sourceLangSelect.options[sourceLangSelect.selectedIndex].text;
+                const targetLangName = targetLangSelect.options[targetLangSelect.selectedIndex].text;
+                showStatus(`🎤 Recording started! Speak in ${sourceLangName} - translating to ${targetLangName}`, 'success');
             };
             
             recognition.onresult = function(event) {
@@ -80,7 +85,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 
                 // Update transcript display
-                transcriptEl.innerHTML = finalTranscript + '<span style="color: #666;">' + interimTranscript + '</span>';
+                const currentContent = finalTranscript + '<span style="color: #666;">' + interimTranscript + '</span>';
+                transcriptEl.innerHTML = currentContent || '<div style="color: #6b7280; font-style: italic;">Your speech will appear here...</div>';
                 
                 // If we have final results, translate them
                 if (finalTranscript.trim()) {
@@ -177,10 +183,14 @@ document.addEventListener('DOMContentLoaded', function() {
     async function translateText(text) {
         try {
             const targetLang = targetLangSelect.value;
+            const sourceLang = sourceLangSelect.value;
+            
+            // Convert Web Speech API language codes to Google Translate language codes
+            const sourceForTranslation = getGoogleTranslateLanguageCode(sourceLang);
             
             const formData = new FormData();
             formData.append('text', text);
-            formData.append('source_language', 'auto'); // Auto-detect source language
+            formData.append('source_language', sourceForTranslation);
             formData.append('target_language', targetLang);
             
             const response = await fetch('/translate', {
@@ -195,6 +205,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const result = await response.json();
             
             if (result.translated_text) {
+                // Clear placeholder text on first translation
+                if (translationEl.innerHTML.includes('Translations will appear here')) {
+                    translationEl.innerHTML = '';
+                }
+                
                 // Append to existing translations
                 const translationDiv = document.createElement('div');
                 translationDiv.className = 'translation-item';
@@ -238,18 +253,22 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function getSourceLanguage(targetLang) {
-        // Map target languages to likely source languages for better recognition
+    function getGoogleTranslateLanguageCode(webSpeechLangCode) {
+        // Convert Web Speech API language codes (e.g., 'en-US') to Google Translate codes (e.g., 'en')
         const languageMap = {
-            'en': 'en-US',   // If translating to English, assume source might be various
-            'es': 'es-ES',   // If translating to Spanish, assume Spanish source
-            'fr': 'fr-FR',   // If translating to French, assume French source
-            'de': 'de-DE',   // If translating to German, assume German source
-            'fa': 'fa-IR'    // If translating to Farsi, assume Farsi source
+            'en-US': 'en',
+            'en-GB': 'en',
+            'es-ES': 'es',
+            'fr-FR': 'fr',
+            'de-DE': 'de',
+            'fa-IR': 'fa',
+            'ar-SA': 'ar',
+            'zh-CN': 'zh',
+            'ja-JP': 'ja',
+            'ko-KR': 'ko'
         };
         
-        // Default to English if target is something else, or use auto-detection
-        return languageMap[targetLang] || 'en-US';
+        return languageMap[webSpeechLangCode] || webSpeechLangCode.split('-')[0] || 'auto';
     }
 
     function showStatus(message, type = 'info') {
@@ -283,5 +302,5 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Show initial help message
-    showStatus('🎯 Select your target language and click "Start Speaking" to begin real-time translation!', 'info');
+    showStatus('🎯 Select your source language (what you speak) and target language (translation), then click "Start Speaking"!', 'info');
 });

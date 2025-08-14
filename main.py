@@ -39,10 +39,14 @@ os.makedirs("temp_audio", exist_ok=True)
 # Map Google language codes to Azure TTS voice names
 TTS_VOICES = {
     "en": "en-US-JennyNeural",
-    "es": "es-ES-ElviraNeural",
+    "es": "es-ES-ElviraNeural", 
     "fr": "fr-FR-DeniseNeural",
     "de": "de-DE-KatjaNeural",
     "fa": "fa-IR-FaridNeural",
+    "ar": "ar-SA-ZariyahNeural",
+    "zh": "zh-CN-XiaoxiaoNeural",
+    "ja": "ja-JP-NanamiNeural",
+    "ko": "ko-KR-SunHiNeural",
 }
 
 @app.get("/")

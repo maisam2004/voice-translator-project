@@ -67,6 +67,17 @@ h1 {
     backdrop-filter: blur(10px);
 }
 
+.language-row {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.language-input {
+    flex: 1;
+    min-width: 200px;
+}
+
 .language-selector label {
     display: block;
     margin-bottom: 0.5rem;
