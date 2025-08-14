@@ -9,6 +9,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const statusEl = document.getElementById('status-message');
     const sourceLangSelect = document.getElementById('source-language');
     const targetLangSelect = document.getElementById('target-language');
+    const transcriptSection = document.getElementById('transcript-section');
+    const translationSection = document.getElementById('translation-section');
 
     // State variables
     let recognition;
@@ -36,13 +38,20 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             showStatus('🎤 Starting recording...', 'info');
             
-            // Reset UI
+            // Reset UI and show result sections
             startBtn.disabled = true;
             stopBtn.disabled = false;
             transcriptEl.textContent = '';
             translationEl.innerHTML = '<div style="color: #6b7280; font-style: italic;">Translations will appear here...</div>';
             audioPlayer.src = '';
             audioPlayer.style.display = 'none';
+            
+            // Show the result sections with smooth animation
+            transcriptSection.classList.add('show');
+            // Show translation section with a slight delay for progressive reveal
+            setTimeout(() => {
+                translationSection.classList.add('show');
+            }, 200);
             
             // Initialize Web Speech API
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
