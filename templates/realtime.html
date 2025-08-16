@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🎙️ Real-Time Voice Translator</title>
     <link rel="stylesheet" href="/static/css/realtime.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div class="container">
@@ -17,7 +18,6 @@
                 <span class="nav-btn active">🎤 Real-Time Speaking</span>
             </div>
         </header>
-
         <div class="card language-selector">
             <div class="language-row">
                 <div class="language-input">
@@ -35,6 +35,11 @@
                         <option value="ko-KR">🇰🇷 Korean</option>
                     </select>
                 </div>
+                <div class="swap-container">
+                    <button id="swap-languages-btn" class="swap-btn" title="Swap languages">
+                        <i class="fas fa-exchange-alt"></i>
+                    </button>
+                </div>
                 <div class="language-input">
                     <label for="target-language">🎯 Translate To:</label>
                     <select id="target-language">
@@ -51,15 +56,11 @@
                 </div>
             </div>
         </div>
-
         <div class="card recording-section">
             <h2>🎙️ Voice Recording</h2>
             <div class="recording-controls">
-                <button id="start-recording-btn" class="btn btn-primary">
-                    🎤 Start Speaking
-                </button>
-                <button id="stop-recording-btn" class="btn btn-error" disabled>
-                    ⏹️ Stop Recording
+                <button id="toggle-recording-btn" class="btn btn-primary">
+                    <i class="fas fa-microphone"></i> Start Speaking
                 </button>
             </div>
             
@@ -71,21 +72,17 @@
                 <div class="recording-timer">00:00</div>
             </div>
         </div>
-
         <div class="card result-section" id="transcript-section">
             <h2>🎯 Live Transcription</h2>
             <div class="transcript-content" id="transcript-content">Your speech will appear here...</div>
         </div>
-
         <div class="card result-section" id="translation-section">
             <h2>🌐 Translation Output</h2>
             <div class="translation-output" id="translation-output">Translations will appear here...</div>
             <audio id="translation-audio" class="audio-player" controls></audio>
         </div>
-
         <div class="status-message" id="status-message"></div>
     </div>
-
     <script src="/static/js/realtime_webspeech.js"></script>
 </body>
 </html>
