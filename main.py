@@ -230,6 +230,10 @@ async def cleanup_temp_files():
 async def realtime_translation(request: Request):
     return templates.TemplateResponse("realtime.html", {"request": request})
 
+@app.get("/change")
+async def change_translation(request: Request):
+    return templates.TemplateResponse("change.html", {"request": request})
+
 @app.get("/get-realtime-token")
 async def get_realtime_token():
     """Get a real-time token for AssemblyAI Universal Streaming API."""
