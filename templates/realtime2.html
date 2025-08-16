@@ -4,11 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🎙️ Real-Time Voice Translator</title>
-    
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
         :root {
             /* Design System Variables */
@@ -45,13 +41,13 @@
             /* Radius */
             --radius: 20px;
         }
-        
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
-        
+
         body {
             font-family: var(--font-family);
             font-size: var(--size-body);
@@ -63,24 +59,8 @@
             flex-direction: column;
             align-items: center;
             padding: var(--spacing-lg);
-            /* Abstract background pattern */
-            background-image: 
-                radial-gradient(circle at 25% 25%, #ff9a9e 0%, transparent 50%),
-                radial-gradient(circle at 75% 75%, #a1c4fd 0%, transparent 50%),
-                radial-gradient(circle at 50% 50%, #d4fc79 0%, transparent 50%);
-            background-size: 400px 400px;
-            background-position: 0 0, 200px 200px, 100px 100px;
-            animation: backgroundMove 20s ease infinite;
         }
-        
-        @keyframes backgroundMove {
-            0% { background-position: 0 0, 200px 200px, 100px 100px; }
-            25% { background-position: 100px 100px, 300px 100px, 200px 200px; }
-            50% { background-position: 200px 0, 0 300px, 300px 100px; }
-            75% { background-position: 300px 200px, 100px 0, 0 300px; }
-            100% { background-position: 0 0, 200px 200px, 100px 100px; }
-        }
-        
+
         .container {
             width: 100%;
             max-width: 1200px;
@@ -88,32 +68,32 @@
             flex-direction: column;
             gap: var(--spacing-md);
         }
-        
+
         header {
             text-align: center;
             margin-bottom: var(--spacing-lg);
         }
-        
+
         h1 {
             font-size: var(--size-headline);
             font-weight: var(--weight-bold);
             margin-bottom: var(--spacing-sm);
             color: var(--text-primary);
         }
-        
+
         .subtitle {
             font-size: var(--size-body);
             color: var(--text-secondary);
             margin-bottom: var(--spacing-md);
         }
-        
+
         .navigation {
             display: flex;
             gap: var(--spacing-md);
             justify-content: center;
             margin-bottom: var(--spacing-xl);
         }
-        
+
         .nav-btn {
             background-color: var(--surface);
             color: var(--text-primary);
@@ -127,53 +107,25 @@
             display: inline-block;
             box-shadow: var(--soft-outer-shadow);
         }
-        
+
         .nav-btn:hover {
             transform: translateY(-2px);
             box-shadow: 6px 6px 12px rgba(0,0,0,0.08);
         }
-        
+
         .nav-btn.active {
             background: linear-gradient(135deg, var(--primary), #FF8A70);
             color: white;
             box-shadow: 0 4px 8px rgba(255, 106, 90, 0.3);
         }
-        
+
         .main-grid {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: var(--spacing-lg);
             width: 100%;
-            transition: all 0.5s ease;
         }
-        
-        .main-grid.recording-active {
-            flex-direction: row;
-            align-items: flex-start;
-        }
-        
-        .left-column {
-            width: 100%;
-            max-width: 600px;
-            transition: all 0.5s ease;
-        }
-        
-        .right-column {
-            width: 100%;
-            max-width: 600px;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(20px);
-            transition: all 0.5s ease;
-        }
-        
-        .main-grid.recording-active .right-column {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-        
+
         .card {
             background-color: var(--surface);
             border-radius: var(--radius);
@@ -181,36 +133,35 @@
             box-shadow: var(--soft-outer-shadow);
             width: 100%;
             transition: all 0.3s ease;
-            border: none;
         }
-        
+
         .card:hover {
             box-shadow: 10px 10px 20px rgba(0,0,0,0.07);
         }
-        
+
         .language-selector {
             margin-bottom: var(--spacing-md);
         }
-        
+
         .language-row {
             display: flex;
             gap: var(--spacing-md);
             flex-wrap: wrap;
             align-items: flex-end;
         }
-        
+
         .language-input {
             flex: 1;
             min-width: 200px;
         }
-        
+
         .swap-container {
             display: flex;
             align-items: center;
             justify-content: center;
             padding-bottom: var(--spacing-sm);
         }
-        
+
         .swap-btn {
             background: linear-gradient(135deg, var(--secondary), #6FD4EA);
             border: none;
@@ -226,19 +177,19 @@
             justify-content: center;
             box-shadow: var(--soft-outer-shadow);
         }
-        
+
         .swap-btn:hover {
             transform: rotate(180deg);
             box-shadow: 4px 4px 8px rgba(78, 198, 224, 0.3);
         }
-        
+
         .language-selector label {
             display: block;
             margin-bottom: var(--spacing-sm);
             font-weight: var(--weight-medium);
             color: var(--text-secondary);
         }
-        
+
         .language-selector select {
             width: 100%;
             padding: var(--spacing-sm);
@@ -250,32 +201,32 @@
             box-shadow: var(--inner-shadow);
             transition: all 0.3s ease;
         }
-        
+
         .language-selector select:focus {
             outline: none;
             box-shadow: inset 0 0 0 2px var(--secondary);
         }
-        
+
         .recording-section {
             margin-bottom: var(--spacing-md);
             display: flex;
             flex-direction: column;
             align-items: center;
         }
-        
+
         .recording-section h2 {
             margin-bottom: var(--spacing-lg);
             color: var(--text-primary);
             font-size: var(--size-large);
             font-weight: var(--weight-medium);
         }
-        
+
         .microphone-container {
             display: flex;
             justify-content: center;
             margin-bottom: var(--spacing-lg);
         }
-        
+
         .microphone-btn {
             background: linear-gradient(135deg, var(--primary), #FF8A70);
             border: none;
@@ -291,17 +242,17 @@
             justify-content: center;
             box-shadow: 0 10px 20px rgba(255, 106, 90, 0.3);
         }
-        
+
         .microphone-btn:hover {
             transform: scale(1.05);
             box-shadow: 0 12px 24px rgba(255, 106, 90, 0.4);
         }
-        
+
         .microphone-btn.active {
             background: linear-gradient(135deg, var(--status-processing), #8E9BA3);
             box-shadow: 0 0 20px rgba(176, 190, 197, 0.6), 0 10px 20px rgba(176, 190, 197, 0.3);
         }
-        
+
         .waveform-container {
             display: flex;
             align-items: center;
@@ -311,7 +262,7 @@
             margin-bottom: var(--spacing-lg);
             gap: 4px;
         }
-        
+
         .waveform-bar {
             width: 6px;
             height: 10px;
@@ -319,12 +270,12 @@
             border-radius: 3px;
             animation: pulse 1.2s infinite ease-in-out;
         }
-        
+
         @keyframes pulse {
             0%, 100% { height: 10px; }
             50% { height: 40px; }
         }
-        
+
         .recording-status {
             display: flex;
             align-items: center;
@@ -336,13 +287,13 @@
             margin-bottom: var(--spacing-md);
             box-shadow: var(--inner-shadow);
         }
-        
+
         .recording-indicator {
             display: flex;
             align-items: center;
             gap: var(--spacing-md);
         }
-        
+
         .pulse-ring {
             width: 16px;
             height: 16px;
@@ -350,24 +301,24 @@
             border-radius: 50%;
             animation: pulse-ring 1.5s infinite;
         }
-        
+
         @keyframes pulse-ring {
             0% { transform: scale(1); opacity: 1; }
             50% { transform: scale(1.2); opacity: 0.7; }
             100% { transform: scale(1); opacity: 1; }
         }
-        
+
         .mic-icon {
             font-size: 24px;
         }
-        
+
         .recording-timer {
             font-family: 'Courier New', monospace;
             font-size: var(--size-medium);
             font-weight: var(--weight-bold);
             color: var(--primary);
         }
-        
+
         .result-section {
             margin-bottom: var(--spacing-md);
             opacity: 0;
@@ -377,21 +328,21 @@
             max-height: 0;
             overflow: hidden;
         }
-        
+
         .result-section.show {
             opacity: 1;
             visibility: visible;
             transform: translateY(0);
             max-height: 1000px;
         }
-        
+
         .result-section h2 {
             margin-bottom: var(--spacing-md);
             color: var(--text-primary);
             font-size: var(--size-large);
             font-weight: var(--weight-medium);
         }
-        
+
         .transcript-content, .translation-output {
             min-height: 120px;
             padding: var(--spacing-md);
@@ -402,7 +353,7 @@
             line-height: 1.6;
             box-shadow: var(--inner-shadow);
         }
-        
+
         .translation-item {
             background: linear-gradient(135deg, rgba(78, 198, 224, 0.1), rgba(78, 198, 224, 0.2));
             border-radius: 12px;
@@ -411,14 +362,14 @@
             color: var(--text-primary);
             box-shadow: var(--inner-shadow);
         }
-        
+
         .audio-player {
             width: 100%;
             margin-top: var(--spacing-md);
             border-radius: 12px;
             height: 40px;
         }
-        
+
         .status-message {
             padding: var(--spacing-md);
             border-radius: var(--radius);
@@ -428,7 +379,7 @@
             align-items: center;
             gap: var(--spacing-sm);
         }
-        
+
         .status-spinner {
             display: inline-block;
             width: 16px;
@@ -438,39 +389,39 @@
             border-top-color: white;
             animation: spin 1s ease-in-out infinite;
         }
-        
+
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
-        
+
         .status-success {
             background: linear-gradient(135deg, #059669, #10B981);
             color: white;
             box-shadow: 0 4px 8px rgba(5, 150, 105, 0.2);
         }
-        
+
         .status-error {
             background: linear-gradient(135deg, #EF4444, #F87171);
             color: white;
             box-shadow: 0 4px 8px rgba(239, 68, 68, 0.2);
         }
-        
+
         .status-warning {
             background: linear-gradient(135deg, #F59E0B, #FBBF24);
             color: white;
             box-shadow: 0 4px 8px rgba(245, 158, 11, 0.2);
         }
-        
+
         .status-info {
             background: linear-gradient(135deg, var(--secondary), #6FD4EA);
             color: white;
             box-shadow: 0 4px 8px rgba(78, 198, 224, 0.2);
         }
-        
+
         /* Mobile Responsiveness */
         @media (max-width: 768px) {
-            .main-grid.recording-active {
-                flex-direction: column;
+            .main-grid {
+                grid-template-columns: 1fr;
             }
             
             .container {
@@ -481,36 +432,6 @@
                 width: 80px;
                 height: 80px;
                 font-size: 28px;
-            }
-            
-            /* Compact language selector for mobile */
-            .language-selector {
-                padding: var(--spacing-md) var(--spacing-sm);
-                margin-bottom: var(--spacing-sm);
-            }
-            
-            .language-row {
-                flex-direction: column;
-                gap: var(--spacing-sm);
-            }
-            
-            .language-input {
-                min-width: 100%;
-            }
-            
-            .swap-container {
-                padding: var(--spacing-xs) 0;
-                transform: rotate(90deg);
-            }
-            
-            .language-selector label {
-                font-size: var(--size-small);
-                margin-bottom: var(--spacing-xs);
-            }
-            
-            .language-selector select {
-                padding: var(--spacing-xs) var(--spacing-sm);
-                font-size: var(--size-small);
             }
         }
     </style>
@@ -527,13 +448,13 @@
             </div>
         </header>
         
-        <div class="main-grid" id="main-grid">
+        <div class="main-grid">
             <div class="left-column">
                 <div class="card language-selector">
                     <div class="language-row">
                         <div class="language-input">
-                            <label for="source-language" class="form-label">🎤 Speak In:</label>
-                            <select id="source-language" class="form-select">
+                            <label for="source-language">🎤 Speak In:</label>
+                            <select id="source-language">
                                 <option value="en-US">🇺🇸 English (US)</option>
                                 <option value="en-GB">🇬🇧 English (UK)</option>
                                 <option value="es-ES">🇪🇸 Spanish</option>
@@ -552,8 +473,8 @@
                             </button>
                         </div>
                         <div class="language-input">
-                            <label for="target-language" class="form-label">🎯 Translate To:</label>
-                            <select id="target-language" class="form-select">
+                            <label for="target-language">🎯 Translate To:</label>
+                            <select id="target-language">
                                 <option value="en">🇺🇸 English</option>
                                 <option value="es">🇪🇸 Spanish</option>
                                 <option value="fr">🇫🇷 French</option>
@@ -571,7 +492,7 @@
                 <div class="card recording-section">
                     <h2>🎙️ Voice Recording</h2>
                     <div class="microphone-container">
-                        <button id="toggle-recording-btn" class="microphone-btn btn">
+                        <button id="toggle-recording-btn" class="microphone-btn">
                             <i class="fas fa-microphone"></i>
                         </button>
                     </div>
@@ -607,9 +528,6 @@
         <div class="status-message" id="status-message"></div>
     </div>
 
-    <!-- Bootstrap JS Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // DOM Elements
@@ -625,7 +543,6 @@
             const transcriptSection = document.getElementById('transcript-section');
             const translationSection = document.getElementById('translation-section');
             const waveformContainer = document.getElementById('waveform-container');
-            const mainGrid = document.getElementById('main-grid');
             
             // State variables
             let recognition;
@@ -694,7 +611,7 @@
                 const sourceBase = sourceValue.split('-')[0];
                 
                 // Find the best matching source option for the target language
-                const newValueSource = findBestLanguageMatch(targetValue);
+                const newSourceValue = findBestLanguageMatch(targetValue);
                 
                 if (newSourceValue) {
                     // Set the new source language
@@ -734,9 +651,6 @@
                     translationEl.innerHTML = '<div style="color: var(--text-secondary); font-style: italic;">Translations will appear here...</div>';
                     audioPlayer.src = '';
                     audioPlayer.style.display = 'none';
-                    
-                    // Add recording-active class to main-grid to trigger layout change
-                    mainGrid.classList.add('recording-active');
                     
                     // Show the result sections with smooth animation
                     transcriptSection.classList.add('show');
@@ -866,9 +780,6 @@
                     // Hide waveform
                     waveformContainer.style.display = 'none';
                     stopWaveformAnimation();
-                    
-                    // Keep the right column visible after recording stops
-                    // (removed: mainGrid.classList.remove('recording-active');)
                     
                     showStatus('🛑 Recording stopped', 'info');
                     
