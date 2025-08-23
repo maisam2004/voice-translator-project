@@ -128,10 +128,63 @@
         }
         
         h1 {
-            font-size: var(--size-headline);
+            font-size: 2.8rem; /* Bigger size */
             font-weight: var(--weight-bold);
             margin-bottom: var(--spacing-sm);
-            color: var(--text-primary);
+            color: #1e3a8a; /* Dark blue color */
+            text-align: center;
+            letter-spacing: 1px;
+            width: 100%;
+            max-width: 500px; /* Fixed max width for desktop */
+            margin-left: auto;
+            margin-right: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        #title-text {
+            transition: all 0.6s ease-in-out;
+            display: inline-block;
+            color: #1e40af; /* Darker blue for text */
+            min-width: 280px; /* Fixed minimum width to prevent jumping */
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        #title-text.fade-out {
+            opacity: 0;
+            transform: translateY(-5px);
+        }
+        
+        /* Mobile responsive adjustments */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem; /* Smaller font for mobile */
+                max-width: 350px; /* Smaller max width for mobile */
+                gap: 10px;
+            }
+            
+            #title-text {
+                min-width: 200px; /* Smaller fixed width for mobile */
+                font-size: 0.9em; /* Slightly smaller text relative to h1 */
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.7rem; /* Even smaller for very small screens */
+                max-width: 300px;
+                gap: 8px;
+            }
+            
+            #title-text {
+                min-width: 180px; /* Even smaller fixed width */
+                font-size: 0.85em;
+            }
         }
         
         .subtitle {
@@ -328,6 +381,21 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 8px rgba(255, 51, 51, 0.3);
             margin-bottom: 10px;
+            display: none; /* Initially hidden */
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        
+        .rec-btn.recording {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+            animation: recPulse 1.5s infinite;
+        }
+        
+        @keyframes recPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
         }
         
         .rec-btn:hover {
@@ -856,7 +924,7 @@
     
     <div class="container">
         <header>
-            <h1>🎙️ Voice Translator</h1>
+            <h1 id="animated-title">🎙️ <span id="title-text">Voice Translator</span></h1>
             <p class="subtitle">Speak in any language, get instant translation</p>
             
             <div class="navigation">
@@ -910,6 +978,7 @@
                     <div class="microphone-container">
                         <button class="rec-btn">REC</button>
                         <button id="toggle-recording-btn" class="microphone-btn btn">
+                            
                             <i class="fas fa-microphone"></i>
                         </button>
                     </div>
@@ -1389,6 +1458,12 @@
                     toggleBtn.innerHTML = '<i class="fas fa-stop"></i>';
                     toggleBtn.classList.add('active');
                     
+                    // Show REC button with animation
+                    const recBtn = document.querySelector('.rec-btn');
+                    if (recBtn) {
+                        recBtn.classList.add('recording');
+                    }
+                    
                     // Show waveform
                     waveformContainer.style.display = 'flex';
                     startWaveformAnimation();
@@ -1525,6 +1600,12 @@
                     
                     toggleBtn.innerHTML = '<i class="fas fa-microphone"></i>';
                     toggleBtn.classList.remove('active');
+                    
+                    // Hide REC button with animation
+                    const recBtn = document.querySelector('.rec-btn');
+                    if (recBtn) {
+                        recBtn.classList.remove('recording');
+                    }
                     
                     // Hide waveform
                     waveformContainer.style.display = 'none';
@@ -1848,6 +1929,47 @@
             
             // Show initial help message
             showStatus('🎯 Select your source language (what you speak) and target language (translation), then click the microphone button!', 'info');
+            
+            // Animated multilingual title
+            const titleTranslations = [
+                { text: 'Voice Translator', lang: 'English' },
+                { text: 'مترجم صوتی', lang: 'Persian' },
+                { text: 'Traducteur Vocal', lang: 'French' },
+                { text: '语音翻译器', lang: 'Chinese' },
+                { text: 'Ses Çevirici', lang: 'Turkish' },
+                { text: 'Traductor de Voz', lang: 'Spanish' }
+            ];
+            
+            let currentTitleIndex = 0;
+            const titleElement = document.getElementById('title-text');
+            
+            function animateTitle() {
+                // Fade out current title
+                titleElement.classList.add('fade-out');
+                
+                setTimeout(() => {
+                    // Change text and fade in
+                    currentTitleIndex = (currentTitleIndex + 1) % titleTranslations.length;
+                    titleElement.textContent = titleTranslations[currentTitleIndex].text;
+                    titleElement.classList.remove('fade-out');
+                }, 300); // Half of the transition duration
+            }
+            
+            // Start title animation after 3 seconds, then every 5 seconds for 1 minute
+            setTimeout(() => {
+                const titleInterval = setInterval(animateTitle, 5000);
+                
+                // Stop after 1 minute (12 cycles)
+                setTimeout(() => {
+                    clearInterval(titleInterval);
+                    // Reset to original English title
+                    titleElement.classList.add('fade-out');
+                    setTimeout(() => {
+                        titleElement.textContent = 'Voice Translator';
+                        titleElement.classList.remove('fade-out');
+                    }, 300);
+                }, 60000); // 60 seconds
+            }, 3000); // Wait 3 seconds before starting
         });
     </script>
     
