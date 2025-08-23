@@ -64,22 +64,51 @@
             flex-direction: column;
             align-items: center;
             padding: var(--spacing-lg);
-            /* Abstract background pattern */
-            background-image: 
-                radial-gradient(circle at 25% 25%, #ff9a9e 0%, transparent 50%),
-                radial-gradient(circle at 75% 75%, #a1c4fd 0%, transparent 50%),
-                radial-gradient(circle at 50% 50%, #d4fc79 0%, transparent 50%);
-            background-size: 400px 400px;
-            background-position: 0 0, 200px 200px, 100px 100px;
-            animation: backgroundMove 20s ease infinite;
+            position: relative;
+            overflow-x: hidden; /* Only hide horizontal overflow */
         }
         
-        @keyframes backgroundMove {
-            0% { background-position: 0 0, 200px 200px, 100px 100px; }
-            25% { background-position: 100px 100px, 300px 100px, 200px 200px; }
-            50% { background-position: 200px 0, 0 300px, 300px 100px; }
-            75% { background-position: 300px 200px, 100px 0, 0 300px; }
-            100% { background-position: 0 0, 200px 200px, 100px 100px; }
+        /* Floating words container */
+        .floating-words-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        /* Floating Translation Words Background */
+        .floating-word {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 20px;
+            font-weight: bold;
+            pointer-events: none;
+            user-select: none;
+            white-space: nowrap;
+            opacity: 0;
+            animation: floatUp 25s linear infinite;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(20px);
+                opacity: 0;
+            }
         }
         
         .container {
@@ -782,6 +811,9 @@
     </style>
 </head>
 <body>
+    <!-- Floating words container -->
+    <div class="floating-words-container" id="floating-words-container"></div>
+    
     <div class="container">
         <header>
             <h1>🎙️ Real-Time Voice Translator</h1>
@@ -1776,6 +1808,75 @@
             
             // Show initial help message
             showStatus('🎯 Select your source language (what you speak) and target language (translation), then click the microphone button!', 'info');
+        });
+    </script>
+    
+    <!-- Floating Multilingual Words Background Animation -->
+    <script>
+        // List of common phrases in multiple languages
+        const multilingualWords = [
+            'Hello', 'Hola', 'Bonjour', 'Hallo', 'Ciao', 'こんにちは', '안녕하세요', 'مرحبا', 'Привет', 'नमस्ते',
+            'Thank You', 'Gracias', 'Merci', 'Danke', 'Grazie', 'ありがとう', '감사합니다', 'شكرا', 'Спасибо', 'धन्यवाद',
+            'Yes', 'Sí', 'Oui', 'Ja', 'Sì', 'はい', '네', 'نعم', 'Да', 'हाँ',
+            'No', 'No', 'Non', 'Nein', 'No', 'いいえ', '아니요', 'لا', 'Нет', 'नहीं',
+            'Help', 'Ayuda', 'Aide', 'Hilfe', 'Aiuto', '助けて', '도와주세요', 'مساعدة', 'Помощь', 'मदद',
+            'Welcome', 'Bienvenido', 'Bienvenue', 'Willkommen', 'Benvenuto', 'ようこそ', '환영합니다', 'مرحباً', 'Добро пожаловать', 'स्वागत है',
+            'Good Morning', 'Buenos Días', 'Bonjour', 'Guten Morgen', 'Buongiorno', 'おはよう', '좋은 아침', 'صباح الخير', 'Доброе утро', 'सुप्रभात',
+            'Good Night', 'Buenas Noches', 'Bonne Nuit', 'Gute Nacht', 'Buonanotte', 'おやすみ', '잘자요', 'تصبح على خير', 'Спокойной ночи', 'शुभ रात्रि',
+            'Please', 'Por Favor', 'S\'il Vous Plaît', 'Bitte', 'Per Favore', 'お願いします', '제발', 'من فضلك', 'Пожалуйста', 'कृपया',
+            'Excuse Me', 'Disculpe', 'Excusez-Moi', 'Entschuldigung', 'Mi Scusi', 'すみません', '실례합니다', 'اعذرني', 'Извините', 'माफ़ करें'
+        ];
+
+        // Function to create floating words
+        function createFloatingWord() {
+            console.log('Creating floating word...');
+            const container = document.getElementById('floating-words-container');
+            if (!container) return;
+            
+            const word = document.createElement('div');
+            word.className = 'floating-word';
+            word.textContent = multilingualWords[Math.floor(Math.random() * multilingualWords.length)];
+            
+            console.log('Word created:', word.textContent);
+            
+            // Random horizontal start position
+            const startX = Math.random() * window.innerWidth;
+            word.style.left = `${startX}px`;
+            word.style.bottom = '0px'; // Start from bottom
+            
+            // Animation duration
+            const duration = 15 + Math.random() * 10;
+            word.style.animationDuration = `${duration}s`;
+            
+            // No delay for immediate visibility
+            word.style.animationDelay = '0s';
+            
+            container.appendChild(word);
+            console.log('Word added to container');
+
+            // Clean up after animation ends
+            setTimeout(() => {
+                if (word && word.parentNode) {
+                    word.remove();
+                    console.log('Word cleaned up');
+                }
+            }, duration * 1000 + 1000);
+        }
+
+        // Generate initial words when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, starting floating words animation...');
+            
+            // Create one immediately for testing
+            createFloatingWord();
+            
+            // Generate more words with intervals
+            for (let i = 1; i < 6; i++) {
+                setTimeout(createFloatingWord, i * 2000);
+            }
+
+            // Keep adding words over time
+            setInterval(createFloatingWord, 5000);
         });
     </script>
 </body>
