@@ -7,8 +7,10 @@
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+   <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> -->
+    <script src="https://kit.fontawesome.com/ecedfde1ad.js" crossorigin="anonymous"></script>
+    <!-- Flag Icons CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@6.11.0/css/flag-icons.min.css" />
     <style>
         :root {
             /* Design System Variables */
@@ -20,7 +22,7 @@
             --text-primary: #1C1C1C;
             --text-secondary: #1c1919ff;
             --status-processing: #B0BEC5;
-            
+            --subtitle: #a6ba2b;
             /* Shadows */
             --soft-outer-shadow: 8px 8px 16px rgba(0,0,0,0.05);
             --inner-shadow: inset -2px -2px 5px rgba(255,255,255,0.7), inset 2px 2px 5px rgba(0,0,0,0.05);
@@ -58,7 +60,8 @@
             font-size: var(--size-body);
             line-height: 1.5;
             color: var(--text-primary);
-            background-color: var(--background);
+            background: linear-gradient(135deg, rgba(46, 125, 235, 0.8), rgba(4, 4, 5, 0.8), rgba(255, 106, 90, 0.8)),
+                        url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2072&q=80') center/cover no-repeat fixed;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -117,8 +120,11 @@
             display: flex;
             flex-direction: column;
             gap: var(--spacing-md);
-            background: #cccccca6;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: var(--radius);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
         
         header {
@@ -147,7 +153,7 @@
         #title-text {
             transition: all 0.6s ease-in-out;
             display: inline-block;
-            color: #1e40af; /* Darker blue for text */
+            color: #ffffffff; /* Darker blue for text */
             min-width: 280px; /* Fixed minimum width to prevent jumping */
             text-align: center;
             white-space: nowrap;
@@ -189,7 +195,7 @@
         
         .subtitle {
             font-size: var(--size-body);
-            color: var(--text-secondary);
+            color: var(--subtitle);
             margin-bottom: var(--spacing-md);
         }
         
@@ -261,22 +267,27 @@
         }
         
         .card {
-            background-color: var(--glassmor_card);
+            background: rgba(28, 26, 26, 0.25);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: var(--radius);
             padding: var(--spacing-lg);
-            box-shadow: var(--soft-outer-shadow);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.1);
             width: 100%;
             transition: all 0.3s ease;
-            border: none;
-            backdrop-filter: blur(40px);
         }
         
         .card:hover {
-            box-shadow: 10px 10px 20px rgba(0,0,0,0.07);
+            background: rgba(255, 255, 255, 0.35);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
         }
         
         .language-selector {
             margin-bottom: var(--spacing-md);
+            position: relative; /* Ensure proper stacking context */
+            overflow: visible; /* Explicitly allow overflow for dropdowns */
+            z-index: 10; /* Layer above other elements */
         }
         
         .language-row {
@@ -289,6 +300,8 @@
         .language-input {
             flex: 1;
             min-width: 200px;
+            position: relative; /* Ensure proper stacking context */
+            z-index: 5; /* Layer above other elements */
         }
         
         .swap-container {
@@ -319,14 +332,108 @@
             box-shadow: 4px 4px 8px rgba(78, 198, 224, 0.3);
         }
         
-        .language-selector label {
-            
-            display: block;
-            margin-bottom: var(--spacing-sm);
-            font-weight: var(--weight-medium);
-            color: var(--surface);
+        /* Flag icon styling */
+        .fi {
+            width: 20px;
+            height: 15px;
+            display: inline-block;
+            margin-right: 8px;
+            border-radius: 2px;
         }
         
+        /* Custom select styling */
+        .custom-select {
+            position: relative;
+            width: 100%;
+            z-index: 10; /* Ensure the select container is above normal content */
+        }
+        
+        .custom-select-display {
+            width: 100%;
+            padding: var(--spacing-sm);
+            border: none;
+            border-radius: 20px;
+            font-size: var(--size-body);
+            background-color: var(--background);
+            color: var(--text-primary);
+            box-shadow: var(--inner-shadow);
+            transition: all 0.3s ease;
+            line-height: 2.3;
+            padding-left: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            user-select: none;
+        }
+        
+        .custom-select-display:hover {
+            box-shadow: inset 0 0 0 1px var(--secondary);
+        }
+        
+        .custom-select-display.active {
+            box-shadow: inset 0 0 0 2px var(--secondary);
+        }
+        
+        .custom-select-display::after {
+            content: '▼';
+            position: absolute;
+            right: 12px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            transition: transform 0.3s ease;
+        }
+        
+        .custom-select-display.active::after {
+            transform: rotate(180deg);
+        }
+        
+        .custom-select-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: var(--background);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 9999; /* High z-index to appear above all other elements */
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+            margin-top: 4px;
+        }
+        
+        .custom-select-dropdown.show {
+            display: block;
+        }
+        
+        .custom-option {
+            padding: 8px 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            font-size: var(--size-body);
+            color: var(--text-primary);
+            transition: background-color 0.2s ease;
+        }
+        
+        .custom-option:hover {
+            background-color: rgba(78, 198, 224, 0.1);
+        }
+        
+        .custom-option:first-child {
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .custom-option:last-child {
+            border-radius: 0 0 12px 12px;
+        }
+        
+        .custom-option.selected {
+            background-color: rgba(78, 198, 224, 0.2);
+            font-weight: var(--weight-medium);
+        }
+        
+        /* Custom select styling to accommodate flags */
         .language-selector select {
             width: 100%;
             padding: var(--spacing-sm);
@@ -338,6 +445,15 @@
             box-shadow: var(--inner-shadow);
             transition: all 0.3s ease;
             line-height: 2.3;
+            padding-left: 12px;
+        }
+        
+        .language-selector label {
+            
+            display: block;
+            margin-bottom: var(--spacing-sm);
+            font-weight: var(--weight-medium);
+            color: var(--surface);
         }
         
         .language-selector select:focus {
@@ -404,7 +520,8 @@
         }
         
         .microphone-btn {
-            background: linear-gradient(135deg, var(--primary), #FF8A70);
+            /* background: linear-gradient(135deg, var(--primary), #FF8A70); */
+            background: linear-gradient(135deg, #a11e10, #eb401a);
             border: none;
             border-radius: 50%;
             width: 100px;
@@ -507,7 +624,7 @@
             gap: var(--spacing-sm);
             cursor: pointer;
             font-size: var(--size-small);
-            color: var(--text-secondary);
+            color: var(--subtitle);
             transition: color 0.3s ease;
         }
         
@@ -540,7 +657,7 @@
         
         .result-section h2 {
             margin-bottom: var(--spacing-md);
-            color: var(--text-primary);
+            color: #ffffffff;
             font-size: var(--size-large);
             font-weight: var(--weight-medium);
         }
@@ -666,9 +783,10 @@
             top: 0;
             height: 100%;
             width: 350px;
-            background-color: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
+            border-left: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: -5px 0 25px rgba(0, 0, 0, 0.15);
             transform: translateX(100%);
             transition: transform 0.3s ease;
             z-index: 1000;
@@ -694,7 +812,7 @@
         .history-title {
             font-size: var(--size-large);
             font-weight: var(--weight-bold);
-            color: var(--text-primary);
+            color: #a1a1a1ff;
         }
         
         .close-history {
@@ -939,18 +1057,35 @@
                     <div class="language-row">
                         <div class="language-input">
                             <label for="source-language" class="form-label">🎤 Speak In:</label>
-                            <select id="source-language" class="form-select">
-                                <option value="en-US">🇺🇸 English (US)</option>
-                                <option value="en-GB">🇬🇧 English (UK)</option>
-                                <option value="es-ES">🇪🇸 Spanish</option>
-                                <option value="fr-FR">🇫🇷 French</option>
-                                <option value="de-DE">🇩🇪 German</option>
-                                <option value="fa-IR">🇮🇷 Farsi</option>
-                                <option value="ar-SA">🇸🇦 Arabic</option>
-                                <option value="zh-CN">🇨🇳 Chinese</option>
-                                <option value="ja-JP">🇯🇵 Japanese</option>
-                                <option value="ko-KR">🇰🇷 Korean</option>
-                            </select>
+                            <div class="custom-select" id="source-language-container">
+                                <select id="source-language" class="form-select" style="display: none;">
+                                    <option value="en-US">🇺🇸 EN</option>
+                                    <option value="en-GB">🇬🇧 EN</option>
+                                    <option value="es-ES">🇪🇸 ES</option>
+                                    <option value="fr-FR">🇫🇷 FR</option>
+                                    <option value="de-DE">🇩🇪 DE</option>
+                                    <option value="fa-IR">🇮🇷 FA</option>
+                                    <option value="ar-SA">🇸🇦 AR</option>
+                                    <option value="zh-CN">🇨🇳 ZH</option>
+                                    <option value="ja-JP">🇯🇵 JA</option>
+                                    <option value="ko-KR">🇰🇷 KO</option>
+                                </select>
+                                <div class="custom-select-display" id="source-display">
+                                    <span class="fi fi-us"></span> EN
+                                </div>
+                                <div class="custom-select-dropdown" id="source-dropdown">
+                                    <div class="custom-option" data-value="en-US"><span class="fi fi-us"></span> EN</div>
+                                    <div class="custom-option" data-value="en-GB"><span class="fi fi-gb"></span> EN</div>
+                                    <div class="custom-option" data-value="es-ES"><span class="fi fi-es"></span> ES</div>
+                                    <div class="custom-option" data-value="fr-FR"><span class="fi fi-fr"></span> FR</div>
+                                    <div class="custom-option" data-value="de-DE"><span class="fi fi-de"></span> DE</div>
+                                    <div class="custom-option" data-value="fa-IR"><span class="fi fi-ir"></span> FA</div>
+                                    <div class="custom-option" data-value="ar-SA"><span class="fi fi-sa"></span> AR</div>
+                                    <div class="custom-option" data-value="zh-CN"><span class="fi fi-cn"></span> ZH</div>
+                                    <div class="custom-option" data-value="ja-JP"><span class="fi fi-jp"></span> JA</div>
+                                    <div class="custom-option" data-value="ko-KR"><span class="fi fi-kr"></span> KO</div>
+                                </div>
+                            </div>
                         </div>
                         <div class="swap-container">
                             <button id="swap-languages-btn" class="swap-btn" title="Swap languages">
@@ -959,17 +1094,33 @@
                         </div>
                         <div class="language-input">
                             <label for="target-language" class="form-label">🎯 Translate To:</label>
-                            <select id="target-language" class="form-select">
-                                <option value="en">🇺🇸 English</option>
-                                <option value="es">🇪🇸 Spanish</option>
-                                <option value="fr">🇫🇷 French</option>
-                                <option value="de">🇩🇪 German</option>
-                                <option value="fa">🇮🇷 Farsi</option>
-                                <option value="ar">🇸🇦 Arabic</option>
-                                <option value="zh">🇨🇳 Chinese</option>
-                                <option value="ja">🇯🇵 Japanese</option>
-                                <option value="ko">🇰🇷 Korean</option>
-                            </select>
+                            <div class="custom-select" id="target-language-container">
+                                <select id="target-language" class="form-select" style="display: none;">
+                                    <option value="en">🇺🇸 EN</option>
+                                    <option value="es">🇪🇸 ES</option>
+                                    <option value="fr">🇫🇷 FR</option>
+                                    <option value="de">🇩🇪 DE</option>
+                                    <option value="fa">🇮🇷 FA</option>
+                                    <option value="ar">🇸🇦 AR</option>
+                                    <option value="zh">🇨🇳 ZH</option>
+                                    <option value="ja">🇯🇵 JA</option>
+                                    <option value="ko">🇰🇷 KO</option>
+                                </select>
+                                <div class="custom-select-display" id="target-display">
+                                    <span class="fi fi-es"></span> ES
+                                </div>
+                                <div class="custom-select-dropdown" id="target-dropdown">
+                                    <div class="custom-option" data-value="en"><span class="fi fi-us"></span> EN</div>
+                                    <div class="custom-option" data-value="es"><span class="fi fi-es"></span> ES</div>
+                                    <div class="custom-option" data-value="fr"><span class="fi fi-fr"></span> FR</div>
+                                    <div class="custom-option" data-value="de"><span class="fi fi-de"></span> DE</div>
+                                    <div class="custom-option" data-value="fa"><span class="fi fi-ir"></span> FA</div>
+                                    <div class="custom-option" data-value="ar"><span class="fi fi-sa"></span> AR</div>
+                                    <div class="custom-option" data-value="zh"><span class="fi fi-cn"></span> ZH</div>
+                                    <div class="custom-option" data-value="ja"><span class="fi fi-jp"></span> JA</div>
+                                    <div class="custom-option" data-value="ko"><span class="fi fi-kr"></span> KO</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1187,17 +1338,43 @@
             }
             
             // Initialize language options
-            initializeLanguageOptions();
+            // initializeLanguageOptions(); // Commented out - using HTML-defined options with flags
             
             // Initialize waveform
             initializeWaveform();
+            
+            // Load existing history
+            loadHistory();
+            
+            // Initialize custom select dropdowns
+            initializeCustomSelects();
             
             // Load history from localStorage
             function loadHistory() {
                 const savedHistory = localStorage.getItem('translationHistory');
                 if (savedHistory) {
                     translationHistory = JSON.parse(savedHistory);
+                    // Clean up expired blob URLs
+                    cleanupExpiredAudio();
                     renderHistory();
+                }
+            }
+            
+            // Clean up expired blob URLs from history
+            function cleanupExpiredAudio() {
+                let hasChanges = false;
+                translationHistory = translationHistory.map(item => {
+                    if (item.audioUrl && item.audioUrl.startsWith('blob:')) {
+                        // Remove blob URLs as they don't persist across sessions
+                        hasChanges = true;
+                        return { ...item, audioUrl: null };
+                    }
+                    return item;
+                });
+                
+                if (hasChanges) {
+                    saveHistory();
+                    console.log('Cleaned up expired blob URLs from history');
                 }
             }
             
@@ -1230,6 +1407,9 @@
                     const sourceLangName = getLanguageName(item.sourceLang || 'en-US');
                     const targetLangName = getLanguageName(item.targetLang || 'es');
                     
+                    // Check if audio URL is valid (not a broken blob URL)
+                    const hasValidAudio = item.audioUrl && !item.audioUrl.startsWith('blob:');
+                    
                     historyItem.innerHTML = `
                         <div class="history-item-header">
                             <div class="history-languages">${sourceLangName} → ${targetLangName}</div>
@@ -1243,11 +1423,11 @@
                         <div class="history-translation">
                             <strong>🌐 Translation:</strong> ${item.translatedText}
                         </div>
-                        ${item.audioUrl ? `
+                        ${hasValidAudio ? `
                         <audio class="history-audio" controls src="${item.audioUrl}">
                             Your browser does not support the audio element.
                         </audio>
-                        ` : '<div style="color: var(--text-secondary); font-style: italic; margin: 8px 0;">Audio not available</div>'}
+                        ` : '<div style="color: var(--text-secondary); font-style: italic; margin: 8px 0;">🔇 Audio not available (session expired)</div>'}
                         <div class="history-actions">
                             <button class="history-action-btn copy-history" data-text="${item.translatedText}">
                                 <i class="fas fa-copy"></i> Copy
@@ -1417,6 +1597,35 @@
                 return partialMatch ? partialMatch.value : null;
             }
             
+            function updateCustomSelectDisplay(type, value) {
+                // Update the custom dropdown display to match the hidden select value
+                const isSource = type === 'source';
+                const dropdown = isSource ? 
+                    document.getElementById('source-dropdown') : 
+                    document.getElementById('target-dropdown');
+                const display = isSource ? 
+                    document.getElementById('source-display') : 
+                    document.getElementById('target-display');
+                
+                // Find the option with the matching value
+                const option = dropdown.querySelector(`[data-value="${value}"]`);
+                
+                if (option) {
+                    // Get flag class and text from the option
+                    const flagClass = option.querySelector('.fi').className;
+                    const text = option.textContent.trim();
+                    
+                    // Update the display
+                    display.innerHTML = `<span class="${flagClass}"></span> ${text}`;
+                    
+                    // Update selected state in dropdown
+                    dropdown.querySelectorAll('.custom-option').forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    
+                    console.log(`Updated ${type} display to:`, value, text);
+                }
+            }
+            
             function swapLanguages() {
                 // Get current values
                 const sourceValue = sourceLangSelect.value;
@@ -1434,6 +1643,10 @@
                     
                     // Set the new target language to the base of the original source
                     targetLangSelect.value = sourceBase;
+                    
+                    // Update the custom dropdown displays
+                    updateCustomSelectDisplay('source', newSourceValue);
+                    updateCustomSelectDisplay('target', sourceBase);
                     
                     showStatus('Languages swapped successfully!', 'success');
                     
@@ -1653,8 +1866,31 @@
                     const targetLang = targetLangSelect.value;
                     const sourceLang = sourceLangSelect.value;
                     
+                    console.log('Translation attempt - Source Language:', sourceLang, 'Target Language:', targetLang);
+                    
                     // Convert Web Speech API language codes to Google Translate language codes
                     const sourceForTranslation = getGoogleTranslateLanguageCode(sourceLang);
+                    
+                    console.log('After conversion - Source for translation:', sourceForTranslation, 'Target:', targetLang);
+                    
+                    // Check if source and target languages are the same
+                    if (sourceForTranslation === targetLang) {
+                        console.log('Source and target languages are the same, skipping translation');
+                        
+                        // Just display the original text without translation
+                        if (translationEl.innerHTML.includes('Translations will appear here')) {
+                            translationEl.innerHTML = '';
+                        }
+                        
+                        const translationDiv = document.createElement('div');
+                        translationDiv.className = 'translation-item';
+                        translationDiv.textContent = text;
+                        translationEl.appendChild(translationDiv);
+                        
+                        // Generate audio for the original text
+                        generateAudio(text, targetLang, text);
+                        return;
+                    }
                     
                     const formData = new FormData();
                     formData.append('text', text);
@@ -1970,6 +2206,109 @@
                     }, 300);
                 }, 60000); // 60 seconds
             }, 3000); // Wait 3 seconds before starting
+            
+            // Custom Select Functionality
+            function initializeCustomSelects() {
+                // Source language custom select
+                const sourceDisplay = document.getElementById('source-display');
+                const sourceDropdown = document.getElementById('source-dropdown');
+                const sourceSelect = document.getElementById('source-language');
+                
+                // Target language custom select
+                const targetDisplay = document.getElementById('target-display');
+                const targetDropdown = document.getElementById('target-dropdown');
+                const targetSelect = document.getElementById('target-language');
+                
+                // Handle source language selection
+                sourceDisplay.addEventListener('click', function() {
+                    sourceDropdown.classList.toggle('show');
+                    sourceDisplay.classList.toggle('active');
+                    // Close target dropdown if open
+                    targetDropdown.classList.remove('show');
+                    targetDisplay.classList.remove('active');
+                });
+                
+                // Handle target language selection
+                targetDisplay.addEventListener('click', function() {
+                    targetDropdown.classList.toggle('show');
+                    targetDisplay.classList.toggle('active');
+                    // Close source dropdown if open
+                    sourceDropdown.classList.remove('show');
+                    sourceDisplay.classList.remove('active');
+                });
+                
+                // Handle source option selection
+                sourceDropdown.addEventListener('click', function(e) {
+                    if (e.target.classList.contains('custom-option') || e.target.closest('.custom-option')) {
+                        const option = e.target.closest('.custom-option');
+                        const value = option.getAttribute('data-value');
+                        const flagClass = option.querySelector('.fi').className;
+                        const text = option.textContent.trim();
+                        
+                        // Update display
+                        sourceDisplay.innerHTML = `<span class="${flagClass}"></span> ${text}`;
+                        
+                        // Update hidden select
+                        sourceSelect.value = value;
+                        
+                        // Update selected state
+                        sourceDropdown.querySelectorAll('.custom-option').forEach(opt => opt.classList.remove('selected'));
+                        option.classList.add('selected');
+                        
+                        // Close dropdown
+                        sourceDropdown.classList.remove('show');
+                        sourceDisplay.classList.remove('active');
+                        
+                        console.log('Source language changed to:', value);
+                    }
+                });
+                
+                // Handle target option selection
+                targetDropdown.addEventListener('click', function(e) {
+                    if (e.target.classList.contains('custom-option') || e.target.closest('.custom-option')) {
+                        const option = e.target.closest('.custom-option');
+                        const value = option.getAttribute('data-value');
+                        const flagClass = option.querySelector('.fi').className;
+                        const text = option.textContent.trim();
+                        
+                        // Update display
+                        targetDisplay.innerHTML = `<span class="${flagClass}"></span> ${text}`;
+                        
+                        // Update hidden select
+                        targetSelect.value = value;
+                        
+                        // Update selected state
+                        targetDropdown.querySelectorAll('.custom-option').forEach(opt => opt.classList.remove('selected'));
+                        option.classList.add('selected');
+                        
+                        // Close dropdown
+                        targetDropdown.classList.remove('show');
+                        targetDisplay.classList.remove('active');
+                        
+                        console.log('Target language changed to:', value);
+                    }
+                });
+                
+                // Close dropdowns when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!e.target.closest('.custom-select')) {
+                        sourceDropdown.classList.remove('show');
+                        sourceDisplay.classList.remove('active');
+                        targetDropdown.classList.remove('show');
+                        targetDisplay.classList.remove('active');
+                    }
+                });
+                
+                // Set initial selected states and default values
+                sourceDropdown.querySelector('[data-value="en-US"]').classList.add('selected');
+                targetDropdown.querySelector('[data-value="es"]').classList.add('selected');
+                
+                // Ensure the hidden select elements have correct default values
+                sourceSelect.value = 'en-US';
+                targetSelect.value = 'es';
+                
+                console.log('Initialized - Source language:', sourceSelect.value, 'Target language:', targetSelect.value);
+            }
         });
     </script>
     
