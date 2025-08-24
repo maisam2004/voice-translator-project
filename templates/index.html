@@ -3,6 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+   <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> -->
+    <script src="https://kit.fontawesome.com/ecedfde1ad.js" crossorigin="anonymous"></script>
+    <!-- Flag Icons CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@6.11.0/css/flag-icons.min.css" />
     <title>🎙️ Voice Translator - Any Language</title>
     <style>
         :root {
@@ -17,6 +23,19 @@
             --border-radius: 16px;
             --padding: 24px;
             --margin: 16px;
+            
+            /* Additional variables from realtime.html for navigation */
+            --primary: #FF6A5A;
+            --secondary: #4EC6E0;
+            --surface: #FFFFFF;
+            --text-primary: #1C1C1C;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --size-body: 14px;
+            --soft-outer-shadow: 8px 8px 16px rgba(0,0,0,0.05);
         }
 
         * {
@@ -29,13 +48,62 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             font-size: 16px;
             line-height: 1.5;
-            color: #1f2937;
-            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            color: #ffffff;
+            overflow-x: hidden;
             min-height: 100vh;
+            position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: var(--padding);
+            
+            /* Enhanced Animated Background */
+            background: 
+                linear-gradient(135deg, rgba(26, 26, 46, 0.95) 0%, rgba(22, 33, 62, 0.95) 100%),
+                url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
+        }
+
+        /* Floating words container */
+        .floating-words-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        /* Floating Translation Words Background */
+        .floating-word {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.1);
+            font-size: 18px;
+            font-weight: 500;
+            animation: floatUp 20s linear infinite;
+            pointer-events: none;
+            white-space: nowrap;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes floatUp {
+            0% {
+                bottom: -50px;
+                opacity: 0;
+                transform: translateY(0) rotate(0deg);
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                bottom: 100vh;
+                opacity: 0;
+                transform: translateY(-50px) rotate(5deg);
+            }
         }
 
         .container {
@@ -44,10 +112,34 @@
             display: flex;
             flex-direction: column;
             gap: var(--margin);
+            position: relative;
+            z-index: 10;
         }
 
         header {
             text-align: center;
+            color: var(--white);
+            margin-bottom: var(--margin);
+            position: relative;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            animation: titleFadeIn 2s ease-out;
+        }
+
+        @keyframes titleFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
             color: var(--white);
             margin-bottom: var(--margin);
             position: relative;
@@ -87,17 +179,62 @@
             background-color: rgba(255, 255, 255, 0.3);
         }
 
+        .navigation {
+            display: flex;
+            gap: var(--spacing-md);
+            justify-content: center;
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .nav-btn {
+            background-color: var(--surface);
+            color: var(--text-primary);
+            border: none;
+            border-radius: 50px;
+            padding: var(--spacing-sm) var(--spacing-md);
+            font-size: var(--size-body);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: var(--soft-outer-shadow);
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 6px 6px 12px rgba(0,0,0,0.08);
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+        
+        .nav-btn.active {
+            background: linear-gradient(135deg, var(--primary), #FF8A70);
+            color: white;
+            box-shadow: 0 4px 8px rgba(255, 106, 90, 0.3);
+        }
+
         .language-selector {
-            background-color: var(--white);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
             border-radius: var(--border-radius);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             padding: 16px;
-            box-shadow: var(--card-shadow);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
             width: 100%;
+            transition: var(--transition);
+        }
+
+        .language-selector:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
         }
 
         .language-selector label {
             display: block;
             margin-bottom: 8px;
+            color: var(--white);
+            font-weight: 500;
             font-weight: 500;
         }
 
@@ -123,17 +260,22 @@
         }
 
         .step-card {
-            background-color: var(--white);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
             border-radius: var(--border-radius);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             padding: var(--padding);
-            box-shadow: var(--card-shadow);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
             position: relative;
             display: none;
             animation: fadeIn 0.5s ease;
+            color: var(--white);
         }
 
         .step-card.active {
             display: block;
+            background: rgba(255, 255, 255, 0.15);
         }
 
         .step-card.completed {
@@ -177,7 +319,7 @@
 
         /* Step 1 - File Upload */
         .upload-zone {
-            border: 2px dashed #d1d5db;
+            border: 2px dashed rgba(255, 255, 255, 0.3);
             border-radius: 12px;
             padding: 24px;
             text-align: center;
@@ -189,12 +331,17 @@
             align-items: center;
             justify-content: center;
             margin-bottom: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            color: var(--white);
         }
 
         .upload-zone:hover,
         .upload-zone.drag-over {
-            border-color: var(--primary-blue);
-            background-color: rgba(37, 99, 235, 0.05);
+            border-color: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
         }
 
         .upload-icon {
@@ -213,11 +360,15 @@
         }
 
         .file-preview {
-            background-color: var(--light-gray);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 8px;
             padding: 12px;
             margin-bottom: 16px;
             display: none;
+            color: var(--white);
         }
 
         .file-preview.active {
@@ -341,7 +492,7 @@
 
         .progress-text {
             font-size: 14px;
-            color: var(--text-gray);
+            color: rgba(255, 255, 255, 0.8);
             text-align: center;
         }
 
@@ -375,7 +526,8 @@
 
         .summary-text {
             margin-bottom: 12px;
-            color: #4b5563;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.5;
         }
 
         /* Loading spinner */
@@ -426,6 +578,9 @@
     </style>
 </head>
 <body>
+    <!-- Floating words container -->
+    <div class="floating-words-container" id="floating-words-container"></div>
+    
     <div class="container">
         <header>
             <h1>🎙️ Voice Translator</h1>
@@ -434,6 +589,7 @@
                 <span class="nav-btn active">📁 File Upload</span>
                 <a href="/realtime" class="nav-btn">🎤 Real-Time Speaking</a>
             </div>
+            
             <button class="reset-btn" id="reset-btn">🔄 Start Over</button>
         </header>
 
@@ -867,6 +1023,65 @@
             function hideAllMessages() {
                 document.querySelectorAll('.message').forEach(msg => msg.remove());
             }
+
+            // Floating Multilingual Words Background Animation
+            const multilingualWords = [
+                'Hello', 'Hola', 'Bonjour', 'Hallo', 'Ciao', 'こんにちは', '안녕하세요', 'مرحبا', 'Привет', 'नमस्ते',
+                'Thank You', 'Gracias', 'Merci', 'Danke', 'Grazie', 'ありがとう', '감사합니다', 'شكرا', 'Спасибо', 'धन्यवाद',
+                'Yes', 'Sí', 'Oui', 'Ja', 'Sì', 'はい', '네', 'نعم', 'Да', 'हाँ',
+                'No', 'No', 'Non', 'Nein', 'No', 'いいえ', '아니요', 'لا', 'Нет', 'नहीं',
+                'Help', 'Ayuda', 'Aide', 'Hilfe', 'Aiuto', '助けて', '도와주세요', 'مساعدة', 'Помощь', 'मदद',
+                'Welcome', 'Bienvenido', 'Bienvenue', 'Willkommen', 'Benvenuto', 'ようこそ', '환영합니다', 'مرحباً', 'Добро пожаловать', 'स्वागत है',
+                'Good Morning', 'Buenos Días', 'Bonjour', 'Guten Morgen', 'Buongiorno', 'おはよう', '좋은 아침', 'صباح الخير', 'Доброе утро', 'सुप्रभात',
+                'Good Night', 'Buenas Noches', 'Bonne Nuit', 'Gute Nacht', 'Buonanotte', 'おやすみ', '잘자요', 'تصبح على خير', 'Спокойной ночи', 'शुभ रात्रि',
+                'Please', 'Por Favor', 'S\'il Vous Plaît', 'Bitte', 'Per Favore', 'お願いします', '제발', 'من فضلك', 'Пожалуйста', 'कृपया',
+                'Excuse Me', 'Disculpe', 'Excusez-Moi', 'Entschuldigung', 'Mi Scusi', 'すみません', '실례합니다', 'اعذرني', 'Извините', 'माफ़ करें'
+            ];
+
+            // Function to create floating words
+            function createFloatingWord() {
+                const container = document.getElementById('floating-words-container');
+                if (!container) return;
+                
+                const word = document.createElement('div');
+                word.className = 'floating-word';
+                word.textContent = multilingualWords[Math.floor(Math.random() * multilingualWords.length)];
+                
+                // Random horizontal start position
+                const startX = Math.random() * window.innerWidth;
+                word.style.left = `${startX}px`;
+                word.style.bottom = '0px'; // Start from bottom
+                
+                // Animation duration
+                const duration = 15 + Math.random() * 10;
+                word.style.animationDuration = `${duration}s`;
+                
+                container.appendChild(word);
+
+                // Clean up after animation ends
+                setTimeout(() => {
+                    if (word && word.parentNode) {
+                        word.remove();
+                    }
+                }, duration * 1000 + 1000);
+            }
+
+            // Generate floating words when page loads
+            function initFloatingWords() {
+                // Create one immediately
+                createFloatingWord();
+                
+                // Generate more words with intervals
+                for (let i = 1; i < 6; i++) {
+                    setTimeout(createFloatingWord, i * 2000);
+                }
+
+                // Keep adding words over time
+                setInterval(createFloatingWord, 5000);
+            }
+
+            // Start floating words animation
+            initFloatingWords();
         });
     </script>
 </body>
