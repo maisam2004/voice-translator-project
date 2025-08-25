@@ -38,6 +38,7 @@
             
             /* Typography */
             --font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            --subtitle-font-size:1.32em;
             --weight-regular: 400;
             --weight-medium: 500;
             --weight-bold: 700;
@@ -159,7 +160,7 @@
             min-width: 280px; /* Fixed minimum width to prevent jumping */
             text-align: center;
             white-space: nowrap;
-            overflow: hidden;
+            overflow: visible;
             text-overflow: ellipsis;
         }
         
@@ -196,13 +197,13 @@
         }
         
         .subtitle {
-            font-size: var(--size-body);
+            font-size: var(--subtitle-font-size);
             color: var(--subtitle);
             margin-bottom: var(--spacing-md);
         }
         
         .navigation {
-            display: flex;
+            display: none;
             gap: var(--spacing-md);
             justify-content: center;
             margin-bottom: var(--spacing-xl);
@@ -625,7 +626,7 @@
             justify-content: center;
             gap: var(--spacing-sm);
             cursor: pointer;
-            font-size: var(--size-small);
+            font-size: var(--subtitle-font-size);
             color: var(--subtitle);
             transition: color 0.3s ease;
         }
