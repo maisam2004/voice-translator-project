@@ -12,6 +12,8 @@
     <!-- Flag Icons CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@6.11.0/css/flag-icons.min.css" />
     <style>
+
+        
         :root {
             /* Design System Variables */
             --primary: #FF6A5A;
@@ -573,12 +575,12 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            width: 100%;
+            width: 70%;
             padding: var(--spacing-md);
-            background-color: var(--background);
+            background-color: var(--glassmor_card);
             border-radius: 12px;
             margin-bottom: var(--spacing-md);
-            box-shadow: var(--inner-shadow);
+            box-shadow: inset -2px -2px 5px rgb(50, 49, 48), inset 2px 2px 5px #6c757d24;
         }
         
         .recording-indicator {
@@ -965,6 +967,13 @@
             
             .container {
                 padding: var(--spacing-md);
+                    width: 100%;
+    
+    background: none; 
+     backdrop-filter: none;
+    border: none;
+    border-radius: none; 
+    box-shadow: none;
             }
             
             .microphone-btn {
