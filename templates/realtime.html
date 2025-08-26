@@ -529,7 +529,8 @@
         .tab-btn.active {
             background: linear-gradient(135deg, #4d4443, #161414);
             color: white;
-            box-shadow: 0 2px 8px rgba(255, 106, 90, 0.3);
+            /* box-shadow: 0 2px 8px rgba(255, 106, 90, 0.3); */
+            border: 1px solid gray;
         }
         
         .tab-content {
@@ -1159,6 +1160,11 @@
         
         /* Mobile Responsiveness */
         @media (max-width: 768px) {
+            .tab-btn {
+                padding:5px;
+            }
+
+
             .card.recording-section:hover {
             background:none;
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.2);
