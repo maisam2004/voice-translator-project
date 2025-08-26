@@ -1148,6 +1148,218 @@
             box-shadow: 0 4px 12px rgba(78, 198, 224, 0.3);
             z-index: 999;
             transition: all 0.3s ease;
+        }
+        
+        /* Slide-Up Panel Styles for Mobile Results */
+        .slide-up-panel {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(28, 26, 26, 0.95);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.3);
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 1000;
+            max-height: 85vh;
+            overflow: hidden;
+            display: none;
+            visibility: hidden;
+            opacity: 0;
+        }
+        
+        .slide-up-panel.active {
+            transform: translateY(0);
+            display: block;
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        .slide-up-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: grab;
+        }
+        
+        .slide-up-header:active {
+            cursor: grabbing;
+        }
+        
+        .slide-up-handle {
+            width: 40px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            margin: 0 auto var(--spacing-sm);
+        }
+        
+        .slide-up-title {
+            font-size: var(--size-large);
+            font-weight: var(--weight-bold);
+            color: var(--surface);
+            margin: 0;
+        }
+        
+        .slide-up-close {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--surface);
+            transition: all 0.3s ease;
+            font-size: 16px;
+            z-index: 1001;
+        }
+        
+        .slide-up-close:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.1);
+        }
+        
+        .slide-up-content {
+            padding: var(--spacing-lg);
+            overflow-y: auto;
+            max-height: calc(85vh - 80px);
+            /* Add smooth scrolling for better UX */
+            scroll-behavior: smooth;
+            /* Add subtle scrollbar styling */
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+        }
+        
+        /* Webkit scrollbar styling for better mobile experience */
+        .slide-up-content::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .slide-up-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .slide-up-content::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+        }
+        
+        .slide-up-section {
+            margin-bottom: var(--spacing-lg);
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: var(--spacing-md);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .slide-up-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .slide-up-section h3 {
+            margin: 0 0 var(--spacing-sm) 0;
+            font-size: var(--size-medium);
+            font-weight: var(--weight-medium);
+            color: var(--surface);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+        
+        .slide-up-text {
+            color: var(--surface);
+            line-height: 1.5;
+            font-size: var(--size-body);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .slide-up-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-sm);
+        }
+        
+        .slide-up-action-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            color: var(--surface);
+            cursor: pointer;
+            font-size: var(--size-body);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .slide-up-action-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-1px);
+        }
+        
+        .slide-up-audio {
+            width: 100%;
+            margin-top: var(--spacing-sm);
+            border-radius: 8px;
+        }
+        
+        /* Mobile-specific adjustments */
+        @media (max-width: 768px) {
+            .slide-up-panel {
+                display: block;
+                max-height: 70vh; /* Reduced from 85vh for better button access */
+            }
+            
+            /* Hide the right column on mobile when slide-up is active */
+            .main-grid.slide-up-active .right-column {
+                display: none;
+            }
+        }
+        
+        /* Extra small screens (iPhone SE, etc.) - even more conservative height */
+        @media (max-width: 768px) and (max-height: 600px) {
+            .slide-up-panel {
+                max-height: 60vh; /* Even smaller on very small screens */
+            }
+            
+            .slide-up-content {
+                max-height: calc(60vh - 80px);
+            }
+        }
+        
+        /* Very small screens (iPhone SE portrait) - most conservative */
+        @media (max-width: 768px) and (max-height: 500px) {
+            .slide-up-panel {
+                max-height: 50vh; /* Ensures plenty of space above */
+            }
+            
+            .slide-up-content {
+                max-height: calc(50vh - 80px);
+                padding: var(--spacing-md); /* Reduced padding for more content space */
+            }
+            
+            .slide-up-section {
+                margin-bottom: var(--spacing-md); /* Reduced margins */
+                padding: var(--spacing-sm); /* Reduced padding */
+            }
+        }
+        
+        /* Desktop - hide slide-up panel */
+        @media (min-width: 769px) {
+            .slide-up-panel {
+                display: none !important;
+            }
+        }
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1456,6 +1668,32 @@
         <div class="status-message" id="status-message"></div>
     </div>
     
+    <!-- Mobile Slide-Up Panel for Results -->
+    <div class="slide-up-panel" id="slide-up-panel">
+        <div class="slide-up-handle"></div>
+        <div class="slide-up-header" id="slide-up-header">
+            <h3 class="slide-up-title">🎯 Translation Results</h3>
+            <button class="slide-up-close" id="slide-up-close" onclick="hideSlideUpPanel()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="slide-up-content">
+            <div class="slide-up-section" id="slide-up-translation-section">
+                <h3>🌐 Translation</h3>
+                <div class="slide-up-text" id="slide-up-translation">Translation will appear here...</div>
+                <div class="slide-up-actions">
+                    <button class="slide-up-action-btn" id="slide-up-copy-translation">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                    <button class="slide-up-action-btn" id="slide-up-share-translation">
+                        <i class="fas fa-share-alt"></i>
+                    </button>
+                </div>
+                <audio class="slide-up-audio" id="slide-up-audio" controls style="display: none;"></audio>
+            </div>
+        </div>
+    </div>
+    
     <!-- History Panel -->
     <div class="history-panel" id="history-panel">
         <div class="history-header">
@@ -1501,6 +1739,15 @@
             const tabContents = document.querySelectorAll('.tab-content');
             const voiceTab = document.getElementById('voice-tab');
             const fileTab = document.getElementById('file-tab');
+            
+            // Slide-up panel elements
+            const slideUpPanel = document.getElementById('slide-up-panel');
+            const slideUpHeader = document.getElementById('slide-up-header');
+            const slideUpClose = document.getElementById('slide-up-close');
+            const slideUpTranslation = document.getElementById('slide-up-translation');
+            const slideUpAudio = document.getElementById('slide-up-audio');
+            const slideUpCopyTranslation = document.getElementById('slide-up-copy-translation');
+            const slideUpShareTranslation = document.getElementById('slide-up-share-translation');
             
             // File upload elements
             const uploadZone = document.getElementById('upload-zone');
@@ -1555,6 +1802,167 @@
                         stopRecording();
                     }
                 });
+            });
+            
+            // Slide-Up Panel Functionality
+            let startY = 0;
+            let currentY = 0;
+            let isDragging = false;
+            
+            function showSlideUpPanel(transcriptText, translationText, audioUrl = null) {
+                // Check if we're on mobile
+                if (window.innerWidth <= 768) {
+                    // Update only translation content (user can see original text on the page)
+                    slideUpTranslation.textContent = translationText || 'No translation available';
+                    
+                    // Handle audio
+                    if (audioUrl) {
+                        slideUpAudio.src = audioUrl;
+                        slideUpAudio.style.display = 'block';
+                    } else {
+                        slideUpAudio.style.display = 'none';
+                    }
+                    
+                    // Show the panel
+                    slideUpPanel.classList.add('active');
+                    mainGrid.classList.add('slide-up-active');
+                    
+                    // Prevent body scroll when panel is open
+                    document.body.style.overflow = 'hidden';
+                    
+                    // Add visual hint for very small screens
+                    if (window.innerHeight <= 500) {
+                        const title = slideUpPanel.querySelector('.slide-up-title');
+                        if (title) {
+                            title.textContent = '🎯 Translation (Swipe down to see buttons)';
+                        }
+                    }
+                }
+            }
+            
+            function hideSlideUpPanel() {
+                console.log('hideSlideUpPanel called'); // Debug
+                console.log('slideUpPanel:', slideUpPanel); // Debug
+                console.log('mainGrid:', mainGrid); // Debug
+                
+                if (slideUpPanel) {
+                    slideUpPanel.classList.remove('active');
+                    console.log('Removed active class from slideUpPanel'); // Debug
+                } else {
+                    console.log('slideUpPanel not found!'); // Debug
+                }
+                
+                if (mainGrid) {
+                    mainGrid.classList.remove('slide-up-active');
+                    console.log('Removed slide-up-active class from mainGrid'); // Debug
+                } else {
+                    console.log('mainGrid not found!'); // Debug
+                }
+                
+                document.body.style.overflow = '';
+                console.log('Reset body overflow'); // Debug
+                
+                // Reset transform in case it was dragged
+                if (slideUpPanel) {
+                    slideUpPanel.style.transform = 'translateY(0)';
+                    console.log('Reset panel transform'); // Debug
+                }
+                
+                console.log('hideSlideUpPanel completed'); // Debug
+            }
+            
+            // Make hideSlideUpPanel globally accessible for onclick
+            window.hideSlideUpPanel = hideSlideUpPanel;
+            
+            // Close button event listener
+            document.addEventListener('click', (e) => {
+                if (e.target.id === 'slide-up-close' || e.target.closest('#slide-up-close')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Close button clicked via delegation'); // Debug log
+                    hideSlideUpPanel();
+                }
+            });
+            
+            // Backup: Direct event listener if element exists
+            if (slideUpClose) {
+                slideUpClose.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Close button clicked via direct listener'); // Debug log
+                    hideSlideUpPanel();
+                });
+            } else {
+                console.log('slideUpClose element not found!'); // Debug log
+            }
+            
+            // Touch/drag functionality for panel
+            if (slideUpHeader) {
+                slideUpHeader.addEventListener('touchstart', (e) => {
+                    startY = e.touches[0].clientY;
+                    isDragging = true;
+                }, { passive: true });
+                
+                slideUpHeader.addEventListener('touchmove', (e) => {
+                    if (!isDragging) return;
+                    
+                    currentY = e.touches[0].clientY;
+                    const deltaY = currentY - startY;
+                    
+                    // Only allow dragging down
+                    if (deltaY > 0) {
+                        const translateY = Math.min(deltaY, 300);
+                        slideUpPanel.style.transform = `translateY(${translateY}px)`;
+                    }
+                }, { passive: true });
+                
+                slideUpHeader.addEventListener('touchend', (e) => {
+                    if (!isDragging) return;
+                    
+                    const deltaY = currentY - startY;
+                    isDragging = false;
+                    
+                    // If dragged down more than 100px, close the panel
+                    if (deltaY > 100) {
+                        hideSlideUpPanel();
+                    } else {
+                        // Snap back to original position
+                        slideUpPanel.style.transform = 'translateY(0)';
+                    }
+                }, { passive: true });
+            }
+            
+            // Copy and share functionality for slide-up panel (icons only)
+            if (slideUpCopyTranslation) {
+                slideUpCopyTranslation.addEventListener('click', () => {
+                    const text = slideUpTranslation.textContent;
+                    navigator.clipboard.writeText(text).then(() => {
+                        showStatus('📋 Translation copied!', 'success');
+                    });
+                });
+            }
+            
+            if (slideUpShareTranslation) {
+                slideUpShareTranslation.addEventListener('click', () => {
+                    const text = slideUpTranslation.textContent;
+                    if (navigator.share) {
+                        navigator.share({
+                            title: 'Voice Translation',
+                            text: text
+                        }).catch(console.error);
+                    } else {
+                        navigator.clipboard.writeText(text).then(() => {
+                            showStatus('📋 Translation copied!', 'success');
+                        });
+                    }
+                });
+            }
+            
+            // Close panel when clicking outside
+            slideUpPanel?.addEventListener('click', (e) => {
+                if (e.target === slideUpPanel) {
+                    hideSlideUpPanel();
+                }
             });
             
             // File upload functionality
@@ -1696,6 +2104,9 @@
                         transcriptSection.classList.add('show');
                         translationSection.classList.add('show');
                         mainGrid.classList.add('recording-active');
+                        
+                        // Show slide-up panel on mobile
+                        showSlideUpPanel(transcribeResult.text, translateResult.translated_text, audioUrl);
                         
                         // Add to history
                         addToHistory(transcribeResult.text, translateResult.translated_text, audioUrl);
@@ -2461,6 +2872,10 @@
                         // Update the main audio player
                         audioPlayer.src = audioUrl;
                         audioPlayer.style.display = 'block';
+                        
+                        // Show slide-up panel on mobile with latest transcript and translation
+                        const latestTranscript = transcriptEl.textContent || originalText;
+                        showSlideUpPanel(latestTranscript, text, audioUrl);
                         
                         // Auto-play the translation for natural conversation flow (if enabled)
                         if (autoPlayToggle.checked) {
